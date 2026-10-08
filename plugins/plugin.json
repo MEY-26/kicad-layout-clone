@@ -2,7 +2,7 @@
   "$schema": "https://go.kicad.org/api/schemas/v1",
   "identifier": "com.github.mey-26.kicad-layout-clone",
   "name": "Layout Clone",
-  "description": "Copy anchor-relative footprint placement between repeated circuits using connectivity matching. English and Turkish interface.",
+  "description": "Copy repeated-circuit placement or project-local footprint geometry in separate tabs. Explicit PCB selection, previews and English/Turkish UI.",
   "runtime": {
     "type": "python",
     "min_version": "3.10"
@@ -11,7 +11,7 @@
     {
       "identifier": "clone-layout",
       "name": "Layout Clone",
-      "description": "Replicate footprint placement with anchors, connectivity matching and a preview",
+      "description": "Clone placements or project-local footprint edits with PCB selection and a preview",
       "show-button": true,
       "scopes": [
         "pcb"

@@ -12,6 +12,61 @@ import re
 from string import Formatter
 
 MESSAGES = {
+    'Yerel geometri karşı yüz için yansıtıldı; hedefin yüzü ve açısı korundu.':
+        'Local geometry mirrored for the opposite side; target side and angle preserved.',
+    'bakır katman sayısını okuma': 'reading copper layer count',
+    'Kartın bakır katman sayısı doğrulanamadı.': 'Could not verify the board copper layer count.',
+    'İç bakır katmanı kartın katman yapısıyla uyumsuz.': 'Internal copper layer is incompatible with the board stackup.',
+    'Tüm geometri ve pad ayarlarını göster': 'Show all geometry and pad settings',
+    'Önerilen geometri ve ayarlar (KiCad API alanları):': 'Proposed geometry and settings (KiCad API fields):',
+    'Yerleşim': 'Placement', 'Footprint Düzenlemeleri': 'Footprint Edits',
+    'Yalnız bu PCB’deki footprint geometrisini kopyalar. Yerleşim ve kütüphane değişmez.':
+        'Copy footprint geometry on this PCB only. Placement and libraries stay unchanged.',
+    'Kaynak footprint seçilmedi.': 'No source footprint captured.',
+    'PCB’de tek kaynak seç. Sonra Esc ile seçimi kaldır ve hedefleri seç.':
+        'Select one source on the PCB. Then press Esc and select the targets.',
+    'İsteğe bağlı: benzer footprint öner': 'Optional: suggest similar footprints',
+    'Pad geometrisi ve ayarları': 'Pad geometry and settings',
+    'Footprint çizimleri ve serbest metinler': 'Footprint graphics and free text',
+    'Referans/değer yazılarının biçimi ve yerel konumu': 'Reference/value text formatting and local position',
+    'Korunur: konum, yön, yüz, referans, değer, şema bağlantısı ve pad ağları.\n3B modeller, özel alanlar, footprint kuralları ve zone öğeleri hedefte korunur.':
+        'Preserved: position, orientation, side, reference, value, schematic linkage and pad nets.\nTarget 3D models, custom fields, footprint rules and zones are kept.',
+    '3 · Düzenlemeleri önizle': '3 · Preview edits',
+    '4 · Footprint düzenlemelerini uygula': '4 · Apply footprint edits',
+    'PCB’de yalnız bir kaynak footprint seç.': 'Select exactly one source footprint on the PCB.',
+    'Önce kaynak footprinti al.': 'Capture the source footprint first.',
+    'Kaynak seçimini kaldırıp yalnız hedef footprintleri seç.': 'Clear the source selection and select only target footprints.',
+    'Benzer footprint önerisi bulunamadı.': 'No similar footprints found.',
+    'Yalnız işaretlediğin öneriler hedef listesine eklenir.': 'Only checked suggestions will be added to the target list.',
+    'Benzer footprintler': 'Similar footprints', 'Footprint kimliği': 'Footprint ID',
+    'Açıklama': 'Description',
+    'Footprint düzenlemeleri hazırlanıyor…': 'Preparing footprint edits…',
+    'Footprint düzenlemeleri uygulanıyor…': 'Applying footprint edits…',
+    'Kaynak ve hedefleri al; aktarım kapsamını seçip önizle.': 'Capture source and targets; choose the copy scope and preview.',
+    'Her hedef mevcut konumunda ve açısında kalır. Pad numaraları birebir eşleştirilir.':
+        'Each target keeps its position and angle. Pads are matched exactly by number.',
+    'Aktarılacak kapsam': 'Copy scope',
+    '{ref}: {n} pad değişecek; çizimler {old} → {new}.': '{ref}: {n} pads will change; graphics {old} → {new}.',
+    'Pad': 'Pad', 'Mekanik': 'Mechanical', 'Ağ': 'Net', 'Uyumsuz': 'Incompatible',
+    '{n} footprint düzenlendi. KiCad’de Ctrl+Z ile tek adımda geri alınabilir.':
+        'Edited {n} footprints. Undo in one step with Ctrl+Z in KiCad.',
+    'Komponent artık bulunamıyor: ': 'Footprint no longer exists: ',
+    'Yinelenen veya birden fazla numarasız pad güvenle eşleştirilemiyor.':
+        'Repeated pad numbers or multiple unnumbered pads cannot be matched safely.',
+    'Numarasız pad bir ağa bağlı; aktarım engellendi.': 'An unnumbered pad has a net; transfer blocked.',
+    'Desteklenmeyen footprint alt öğesi var; aktarım engellendi.': 'Unsupported footprint child item; transfer blocked.',
+    'Kaynak ve hedef farklı kart yüzlerinde; bu sürümde aktarım engellendi.':
+        'Source and target are on different board sides; transfer is blocked in this version.',
+    'En az bir aktarım seçeneği seç.': 'Select at least one copy option.',
+    'Kaynak ve hedef pad numaraları farklı; pad ekleme/silme yapılmaz.':
+        'Source and target pad numbers differ; pads are never added or deleted.',
+    'Bakır veya desteklenmeyen katmanda çizim var; çizim aktarımı engellendi.':
+        'A graphic is on copper or an unsupported layer; graphics transfer blocked.',
+    'Bir kaynak ve en az bir hedef footprint seç.': 'Select one source and at least one target footprint.',
+    'Kaynak hedef olarak kullanılamaz; hedefler benzersiz olmalı.': 'Source cannot be a target; targets must be unique.',
+    'Uyumsuz hedefleri kaldırıp yeniden önizle.': 'Remove incompatible targets and preview again.',
+    'KiCad footprint düzenlemesini doğrulamadı: ': 'KiCad did not confirm the footprint edits: ',
+    'Yerleşim Kopyala: footprint düzenlemeleri': 'Layout Clone: footprint edits',
     'Yerleşim Kopyala': 'Layout Clone',
     'Bir yerleşim. Birden fazla devre.': 'One layout. Multiple circuits.',
     'Kaynak yerleşim': 'Source layout', 'Hedef gruplar': 'Target groups',

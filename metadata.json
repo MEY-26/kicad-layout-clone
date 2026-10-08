@@ -1,8 +1,8 @@
 {
   "$schema": "https://go.kicad.org/pcm/schemas/v2",
   "name": "Layout Clone",
-  "description": "Copy footprint placement between repeated circuits using connectivity matching, anchors and a preview. English and Turkish UI.",
-  "description_full": "Replicate one footprint layout across multiple repeated circuits. Select source and target groups directly in the PCB Editor, match parts using pad connectivity, inspect mappings and apply anchor-relative positions and angles. Includes rotation, centre-only reflection and English/Turkish language switching (English by default). Uses the KiCad IPC API and native undo. Does not copy or reroute tracks, vias or zones; run DRC after placement. This testing release targets Windows / KiCad 10.0 and blocks writes when the schematic editor is open because of reported KiCad IPC transaction crashes. See the project README for installation, limitations and troubleshooting.",
+  "description": "Copy repeated-circuit placement and project-local footprint edits with explicit PCB selection. English and Turkish UI.",
+  "description_full": "Layout Clone has separate Placement and Footprint Edits tabs. Copy anchor-relative placements or project-local pad geometry and footprint graphics to explicitly selected PCB targets. Preserve target identity, placement, schematic linkage and pad nets. Includes previews, opt-in similarity suggestions, English/Turkish UI and native undo. Footprint edits require matching unique pad-number sets; opposite-side targets receive a KiCad-compatible geometry reflection and layer conversion. No library or schematic changes; no auto-save. Windows / KiCad 10.0 testing release. Close other PCB and schematic editors before applying. See the bundled usage notes.",
   "identifier": "com.github.mey-26.kicad-layout-clone",
   "type": "plugin",
   "author": {
@@ -24,7 +24,7 @@
   ],
   "versions": [
     {
-      "version": "0.2.1",
+      "version": "0.3.1",
       "status": "testing",
       "kicad_version": "10.0",
       "kicad_version_max": "10.0",

@@ -10,7 +10,7 @@ import re
 import time
 from i18n import tr
 
-VERSION = '0.2.1'
+VERSION = '0.3.1'
 
 
 class LayoutError(ValueError):

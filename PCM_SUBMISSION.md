@@ -1,26 +1,30 @@
-Add Layout Clone 0.2.1 (KiCad 10 IPC plugin)
+Add Layout Clone 0.3.1 (KiCad 10 IPC plugin)
 
-Layout Clone replicates footprint placement between repeated circuits using
-anchor-relative geometry and pad-connectivity matching. Users select source
-and target groups in the PCB Editor, preview mappings and apply one placement
-to multiple targets. It supports English/Turkish, defaults to English and uses
-native undo. Tracks, vias and zones are not copied.
+Layout Clone has separate Placement and Footprint Edits tabs. The former copies
+anchor-relative placement between repeated circuits; the latter transfers project-local
+pad geometry/settings and footprint graphics to explicitly selected targets without changing libraries.
+Target placement, board side, identity, schematic linkage and pad nets are preserved.
+Front/back transfer applies geometry reflection and layer conversion. Selection is never expanded automatically.
 
-- Source and issue tracker: https://github.com/MEY-26/kicad-layout-clone
-- Release: https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.2.1
+- Source / issues: https://github.com/MEY-26/kicad-layout-clone
+- Release: https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.1
 - License: MIT
 - Identifier: com.github.mey-26.kicad-layout-clone
 - Runtime: IPC; KiCad 10.0; Windows; testing status
 - Dependencies: kicad-python 0.7.1, wxPython 4.2.2
 
-The package and submission metadata are validated against KiCad's PCM v2
-schema. Archive structure, hash, size, namespace and IPC manifest are checked.
-Synthetic matching and language tests are in the public repository. The
-development workspace also passed 58 tests, including Windows wx UI and
-adapter tests. Earlier placement builds were tested on an isolated real KiCad
-board copy. A new real-server placement test for 0.2.1 and other OS platforms
-have not been verified.
+I maintain the linked GitHub project. This MR adds only package metadata and a 64x64 catalogue icon.
+The archive retains separate 24x24 / 48x48 toolbar icons. English is the default; Turkish is supported.
+Both flows provide explicit selection, preview and native Undo. Footprint edits require matching unique
+pad-number sets; pad additions/deletions are unsupported. Tracks and vias are not copied or rerouted.
 
-The README documents centre-only reflection, placement-only scope, DRC and
-the guard blocking writes while the schematic editor is open due to reported
-KiCad IPC crashes (#25322 / #24966). The archive is hosted publicly on GitHub.
+Validation: PCM v2 schema, IPC manifest, reproducible archive, namespace, download hash and sizes
+are checked by repository tests. 85 Windows development tests passed. Disposable native KiCad 10.0.5
+tests verified footprint edits, rotated targets, rollback, single-step Undo/Redo and placement.
+Both face-transfer directions were compared with an independent KiCad C++ flip oracle, including
+asymmetric/custom pads and text. User project files remained unchanged; the user also confirmed
+the local 0.3.1 build works. Linux/macOS and installation from the generated PCM catalogue remain unverified.
+
+The English/Turkish documentation explains exact copy scope, DRC, later library updates overwriting
+project-local edits, and existing guards blocking writes with other PCB or schematic editors open.
+The package remains a Windows-only testing release. Maintainer review is pending.

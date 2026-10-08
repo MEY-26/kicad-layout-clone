@@ -28,10 +28,16 @@ COLORS = dict(bg='#eef2f6', card='#ffffff', text='#24364b', muted='#62748a',
 def set_text(control, message):
     control._source_label = message
     control.SetLabel(tr(message))
+    control.InvalidateBestSize()
+    if isinstance(control, wx.CheckBox):
+        # Native Windows checkboxes retain their old label width after SetLabel.
+        # Remove a previous language's minimum before measuring the new label.
+        control.SetMinSize((-1, -1))
+        control.SetMinSize(control.GetBestSize())
 
 
 def localize_tree(window):
-    if isinstance(window, (wx.StaticText, wx.Button, GenButton, wx.CollapsiblePane)):
+    if isinstance(window, (wx.StaticText, wx.Button, wx.CheckBox, GenButton, wx.CollapsiblePane)):
         source = getattr(window, '_source_label', window.GetLabel())
         set_text(window, source)
     tip = window.GetToolTip()
@@ -360,8 +366,12 @@ class MainFrame(wx.Frame):
         header_sizer.Add(language_box, 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 16)
         header.SetSizer(header_sizer)
         root.Add(header, 0, wx.EXPAND)
+        self.modes = wx.Notebook(self.panel)
+        self.placement_panel = wx.Panel(self.modes)
+        self.placement_panel.SetBackgroundColour(COLORS['bg'])
+        placement = wx.BoxSizer(wx.VERTICAL)
         outer = wx.BoxSizer(wx.HORIZONTAL)
-        self.left_panel = ScrolledPanel(self.panel, size=(350, -1), style=wx.VSCROLL)
+        self.left_panel = ScrolledPanel(self.placement_panel, size=(350, -1), style=wx.VSCROLL)
         self.left_panel.SetBackgroundColour(COLORS['bg'])
         self.left_panel.SetMinSize((335, -1))
         left = wx.BoxSizer(wx.VERTICAL)
@@ -425,7 +435,7 @@ class MainFrame(wx.Frame):
         self.left_panel.SetupScrolling(scroll_x=False)
         outer.Add(self.left_panel, 0, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 8)
         right = wx.BoxSizer(wx.VERTICAL)
-        toolbar, toolbar_body = self.card(self.panel, '↻', 'Dönüş ayarları', None)
+        toolbar, toolbar_body = self.card(self.placement_panel, '↻', 'Dönüş ayarları', None)
         options = wx.BoxSizer(wx.HORIZONTAL)
         options.Add(self.label(toolbar, 'Ek dönüş'), 0, wx.ALIGN_CENTER_VERTICAL | wx.RIGHT, 8)
         self.rotation = wx.SpinCtrlDouble(toolbar, min=-360, max=360, inc=90, initial=0, size=(90, -1))
@@ -440,11 +450,11 @@ class MainFrame(wx.Frame):
         toolbar_body.Add(self.info, 0, wx.EXPAND | wx.ALL, 5)
         right.Add(toolbar, 0, wx.EXPAND | wx.BOTTOM, 12)
         preview_heading = wx.BoxSizer(wx.HORIZONTAL)
-        preview_heading.Add(text_style(wx.StaticText(self.panel, label='03  Eşleştirme ve önizleme'), 12, True), 1)
-        self.summary = self.label(self.panel, '0 hedef  ·  0 komponent')
+        preview_heading.Add(text_style(wx.StaticText(self.placement_panel, label='03  Eşleştirme ve önizleme'), 12, True), 1)
+        self.summary = self.label(self.placement_panel, '0 hedef  ·  0 komponent')
         preview_heading.Add(self.summary, 0, wx.ALIGN_CENTER_VERTICAL)
         right.Add(preview_heading, 0, wx.EXPAND | wx.BOTTOM, 10)
-        self.preview_area = wx.Panel(self.panel)
+        self.preview_area = wx.Panel(self.placement_panel)
         self.preview_area.SetBackgroundColour(COLORS['card'])
         self.preview_sizer = wx.BoxSizer(wx.VERTICAL)
         self.empty_preview = EmptyPreview(self.preview_area)
@@ -455,8 +465,8 @@ class MainFrame(wx.Frame):
         self.preview_area.SetSizer(self.preview_sizer)
         right.Add(self.preview_area, 1, wx.EXPAND)
         outer.Add(right, 1, wx.EXPAND | wx.ALL, 16)
-        root.Add(outer, 1, wx.EXPAND)
-        footer = wx.Panel(self.panel)
+        placement.Add(outer, 1, wx.EXPAND)
+        footer = wx.Panel(self.placement_panel)
         footer.SetBackgroundColour(COLORS['card'])
         controls = wx.BoxSizer(wx.HORIZONTAL)
         self.stage_note = self.label(footer, 'Kaynak ve hedef gruplarını seç.')
@@ -469,7 +479,13 @@ class MainFrame(wx.Frame):
         self.apply_button.Enable(False)
         controls.Add(self.apply_button, 0, wx.TOP | wx.BOTTOM | wx.RIGHT, 10)
         footer.SetSizer(controls)
-        root.Add(footer, 0, wx.EXPAND)
+        placement.Add(footer, 0, wx.EXPAND)
+        self.placement_panel.SetSizer(placement)
+        self.modes.AddPage(self.placement_panel, tr('Yerleşim'))
+        from edits_gui import FootprintEditsPanel
+        self.edits = FootprintEditsPanel(self.modes, self)
+        self.modes.AddPage(self.edits, tr('Footprint Düzenlemeleri'))
+        root.Add(self.modes, 1, wx.EXPAND)
         self.panel.SetSizer(root)
         for control in (self.source_anchor, self.source_group, self.target_anchor, self.target_group, self.groups, self.rotation, self.mirror):
             control.SetBackgroundColour(COLORS['card'])
@@ -508,6 +524,9 @@ class MainFrame(wx.Frame):
         self.language.SetSelection(0 if get_language() == 'en' else 1)
         localize_tree(self.panel)
         self.SetTitle(f'{tr("Yerleşim Kopyala")} {VERSION} — KiCad')
+        self.modes.SetPageText(0, tr('Yerleşim'))
+        self.modes.SetPageText(1, tr('Footprint Düzenlemeleri'))
+        self.edits.localize()
         mirror = self.mirror.GetSelection()
         self.mirror.SetItems([tr(s) for s in ('Ayna yok', 'Merkezleri yerel X ekseninde aynala', 'Merkezleri yerel Y ekseninde aynala')])
         self.mirror.SetSelection(mirror)
@@ -604,10 +623,12 @@ class MainFrame(wx.Frame):
             if error is not None:
                 if invalidate_on_error:
                     self.invalidate()
+                    self.edits.invalidate()
                 self.error(error)
             else:
                 done(result)
             self.update_apply()
+            self.edits.refresh_buttons()
         def worker():
             try:
                 result = work()

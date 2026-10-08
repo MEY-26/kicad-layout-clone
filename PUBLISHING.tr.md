@@ -3,28 +3,20 @@
 [English](PUBLISHING.md)
 
 Yayın projesi `MEY-26/kicad-layout-clone`, paket kimliği
-`com.github.mey-26.kicad-layout-clone`. 0.2.1, Windows için test sürümüdür.
+`com.github.mey-26.kicad-layout-clone`. 0.3.1, Windows için test sürümüdür.
 
 ## Güncel başvuru
 
 [Resmi metadata başvurusu !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
 8 Ekim 2026 tarihinde açıldı ve KiCad ekibinin incelemesine hazır duruma getirildi.
-Hesap doğrulamasından sonra [merge doğrulaması](https://gitlab.com/MEY-26/metadata/-/pipelines/2925996678)
-ve [fork doğrulama/katalog oluşturma işleri](https://gitlab.com/MEY-26/metadata/-/pipelines/2925996601)
-geçti. Üretilen test kataloğunun paket/simge hash'leri ve sürüm arşivinin
-hash/boyutu da doğrulandı. Bu durum, eklenti kataloğuna kabul edildiği anlamına
-gelmiyor. Üretilen katalogdan PCM arayüzü üzerinden kurulum henüz doğrulanmadı.
-
-[Geçici v2 PCM test deposu](https://gitlab.com/MEY-26/metadata/-/jobs/17026708950/artifacts/raw/artifacts/repository.json),
-ayrı KiCad yapılandırmasında kurulum denemek için PCM'deki Manage Repositories
-alanına eklenebilir. GitLab CI dosyalarının süresi dolabilir.
-KiCad ekibinin incelemesi bekleniyor.
+Kaynak dalı 0.3.1 sürümüne güncelleniyor. Bu durum, varsayılan kataloğa kabul edildiği anlamına gelmez.
+Üretilen PCM kataloğundan arayüz üzerinden kurulum henüz doğrulanmadı.
 
 ## Sürüm dosyaları
 
 Depo kökünde `python build_pcm.py` çalıştırıldığında:
 
-- `dist/Layout_Clone-0.2.1-pcm.zip`: PCM'de Install from File ile kurulacak paket.
+- `dist/Layout_Clone-0.3.1-pcm.zip`: PCM'de Install from File ile kurulacak paket.
 - `dist/SHA256SUMS.txt`: paketin bütünlük özeti.
 - `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
   indirme bağlantısı, hash ve boyutları içeren resmi depo başvuru dosyası.
@@ -32,7 +24,7 @@ Depo kökünde `python build_pcm.py` çalıştırıldığında:
 
 ZIP içindeki metadata indirme alanlarını içermez. `runtime: ipc` alanı paketin
 eski SWIG eklentisi sayılmasını önler. ZIP ve checksum dosyalarını GitHub'da
-`v0.2.1` etiketli herkese açık sürüme ekle. Giriş yapmadan indirilebildiğini ve
+`v0.3.1` etiketli herkese açık sürüme ekle. Giriş yapmadan indirilebildiğini ve
 SHA256SUMS ile eşleştiğini kontrol et. Başvuru sonrasında paketi değiştirmek
 yerine yeni bir sürüm çıkar.
 

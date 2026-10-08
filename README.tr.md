@@ -8,14 +8,21 @@ seçersin. Parçalar kılıf, değer ve pad bağlantılarıyla eşleştirilir. K
 yönler referans komponente göre aktarılır; referans numaraları ve yerel ağ
 adları farklı olabilir.
 
-**0.2.1 · MIT · İngilizce ve Türkçe · KiCad IPC API**
+**0.3.1 · MIT · İngilizce ve Türkçe · KiCad IPC API**
+
+İki ayrı sekme bulunur: **Yerleşim** konum/açı kopyalar;
+**Footprint Düzenlemeleri** hedefin konumunu, kimliğini ve ağlarını koruyarak
+projeye özgü pad geometrisini ve çizimleri kopyalar.
+[Yeni sekmenin kullanım ve kapsamı](FOOTPRINT_EDITS.tr.md).
 
 [English](README.md) · [Sürümler](https://github.com/MEY-26/kicad-layout-clone/releases) · [Hata bildir](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-![Layout Clone 0.2.0 İngilizce arayüzü](docs/layout-clone-0.2.0.png)
+![Türkçe Footprint Düzenlemeleri](docs/footprint-edits-0.3.1-tr.png)
 
 ## Özellikler
 
+- **Footprint Düzenlemeleri** ile projeye özgü pad geometrisi, çizimler ve isteğe
+  bağlı referans/değer biçimi kopyalanır; karşı yüz dönüşümü de desteklenir.
 - Kaynak ve hedefler PCB üzerinden alınır. Yalnız seçili komponentler
   dahil edilir; seçim otomatik genişletilmez.
 - Bir kaynak yerleşim tek işlemde birden fazla hedefe uygulanabilir.
@@ -34,7 +41,7 @@ Bu topluluk sürümü **Windows ve KiCad 10.0** içindir. KiCad **10.0.5**,
 Python 3.11, `kicad-python==0.7.1` ve `wxPython==4.2.2` ile sınandı.
 Linux/macOS doğrulanmadığından PCM platform listesinde bulunmuyor.
 
-1. Sürüm sayfasından `Layout_Clone-0.2.1-pcm.zip` dosyasını indir.
+1. [Sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.1) `Layout_Clone-0.3.1-pcm.zip` dosyasını indir.
 2. KiCad Proje Yöneticisi'nde **Plugin and Content Manager** bölümünü aç;
    **Install from File…** ile ZIP'i seç.
 3. KiCad Tercihleri'nde **Common → API** altındaki API sunucusunu etkinleştir.
@@ -52,7 +59,7 @@ sürümünü kurmadan önce eski kurulumu yedekleyip kaldır. Böylece iki araç
 düğmesi oluşmaz. Topluluk paketinin kimliği
 `com.github.mey-26.kicad-layout-clone` olarak belirlendi.
 
-## Kullanım
+## Yerleşim sekmesinin kullanımı
 
 1. PCB'de **kaynak grubun bütün komponentlerini** seç. Eklentiyi aç veya
    **1 · PCB kaynak seçimini al** düğmesine bas. Kaynak referansını seç.
@@ -90,7 +97,7 @@ birlikte değerlendirilir.
 
 ## Sınırlar ve sorun giderme
 
-- Yalnız mevcut komponentlerin konumu ve açısı değişir. İzler, via'lar,
+- Yerleşim sekmesinde yalnız mevcut komponentlerin konumu ve açısı değişir. İzler, via'lar,
   bölgeler ve ağ atamaları kopyalanmaz veya yeniden döşenmez.
 - Önizleme merkezleri ve yönleri gösterir; çakışma veya bakır açıklığı kontrolü
   yapmaz. Yerleşimden sonra DRC gerekir.
@@ -113,6 +120,11 @@ birlikte değerlendirilir.
 
 ## Geliştirme ve hata bildirimi
 
+0.3.1 deneme sürümünde yeni sekme, seçim akışı, dil değişimi ve işlem güvenliği
+izole testlerle kontrol edildi. Ayrı bir KiCad 10.0.5 deneme PCB’sinde gerçek
+geometri aktarımı, 37° hedef, işlem iptali, tek adımda Undo/Redo ve mevcut
+yerleşim akışı doğrulandı. Canlı proje dosyaları değiştirilmedi.
+
 Kaynak: [MEY-26/kicad-layout-clone](https://github.com/MEY-26/kicad-layout-clone).
 Hata bildirirken KiCad/eklenti sürümlerini, işletim sistemini, tekrar üretme
 adımlarını ve paylaşılabilir küçük bir örneği ekle. Özel kartları yayımlamak
@@ -120,9 +132,7 @@ istemiyorsan ekleme.
 
 Yayın deposunda sentetik eşleştirme ve dil testleri, paket doğrulaması ve tekrar
 üretilebilir PCM oluşturucusu var. Geliştirme çalışma alanında Windows
-wx/aktarım katmanı testleri de bulunuyor; 0.2.0 önizleme korunurken dil
-değiştirme dahil 58 testten geçti. Önceki yerleşim sürümleri gerçek KiCad'de
-ayrı bir kart kopyasında denendi. Diğer platformlar ve 0.2.0 için yeni bir
-gerçek sunucu taşıma denemesi ayrıca doğrulanmış değildir.
+wx/aktarım katmanı testleri de bulunuyor. 0.3.1 geometri aktarımı, dil,
+seçim ve yerleşim akışlarıyla sınandı. Diğer platformlar doğrulanmış değildir.
 
 MIT lisansı: [LICENSE](LICENSE).

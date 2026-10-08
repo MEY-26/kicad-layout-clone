@@ -3,28 +3,20 @@
 [Türkçe](PUBLISHING.tr.md)
 
 The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
-`com.github.mey-26.kicad-layout-clone`. Version 0.2.1 is a Windows testing release.
+`com.github.mey-26.kicad-layout-clone`. Version 0.3.1 is a Windows testing release.
 
 ## Current submission
 
 [Official metadata merge request !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
 was opened on 8 October 2026 and is ready for KiCad maintainer review.
-[Merge validation](https://gitlab.com/MEY-26/metadata/-/pipelines/2925996678)
-and [fork validation/build](https://gitlab.com/MEY-26/metadata/-/pipelines/2925996601)
-passed after account verification. The generated test catalogue's package and
-resources hashes and the release archive hash/size were also verified.
-This is not an accepted catalogue listing. Installation through the PCM UI
-from the generated catalogue has not yet been verified.
-
-[Temporary v2 PCM test repository](https://gitlab.com/MEY-26/metadata/-/jobs/17026708950/artifacts/raw/artifacts/repository.json)
-can be added in PCM's Manage Repositories for a separate-configuration smoke
-test. GitLab CI artifacts may expire. KiCad maintainer review is pending.
+The source branch is being updated for 0.3.1. This is not an accepted catalogue listing.
+Installation from the generated PCM catalogue has not been verified.
 
 ## Release artifacts
 
 Run `python build_pcm.py` at the repository root. It produces:
 
-- `dist/Layout_Clone-0.2.1-pcm.zip`: installable through PCM's Install from File.
+- `dist/Layout_Clone-0.3.1-pcm.zip`: installable through PCM's Install from File.
 - `dist/SHA256SUMS.txt`: archive integrity hash.
 - `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
   official-repository metadata containing the download URL, hash and sizes.
@@ -33,7 +25,7 @@ Run `python build_pcm.py` at the repository root. It produces:
 
 The ZIP's metadata deliberately omits download fields. The version declares
 `runtime: ipc`, preventing it from being treated as a legacy SWIG plugin.
-Upload the ZIP and checksum to the public GitHub release tagged `v0.2.1`.
+Upload the ZIP and checksum to the public GitHub release tagged `v0.3.1`.
 Verify that the download works without signing in and matches SHA256SUMS.
 Do not replace an archive after its hash is submitted; publish a new version.
 

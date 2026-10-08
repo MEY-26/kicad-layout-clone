@@ -1,48 +1,45 @@
-# Layout Clone 0.2.1
+# Layout Clone 0.3.1
 
-Toolbar icon fix for Windows / KiCad 10.0:
+Copy project-local footprint edits without changing the original library.
 
-- Separate 24x24 toolbar artwork with a 48x48 high-DPI variant. The toolbar
-  no longer uses the 64x64 PCM catalogue icon.
-- README screenshots now use an opaque application capture and a new image
-  URL so dark GitHub themes and older browser caches do not hide the interface.
-- Placement, matching and language behavior are unchanged from 0.2.0.
+- New **Footprint Edits** tab alongside the existing **Placement** tab.
+- Capture one source and any number of targets directly from PCB selection.
+- Copy pad geometry/settings, footprint graphics/free text, and optionally reference/value formatting and local position.
+- Preserve each target's position, angle, board side, reference/value, schematic linkage and pad nets.
+- Support front-to-back and back-to-front transfer with geometry reflection and layer conversion.
+- Preview all targets; optional similarity suggestions never expand a selection automatically.
+- Native batch Undo, existing IPC transaction guards and no automatic board save.
+- Fix clipped Turkish checkbox labels after switching language; retain 24/48-pixel toolbar icons.
 
-Close and reopen the PCB Editor after updating so KiCad reloads the toolbar icons.
-
-Community testing release for **Windows / KiCad 10.0**, tested with KiCad 10.0.5.
-
-- English by default; switch to Turkish in the upper-right language selector.
-- Language choice is remembered, and switching keeps groups and preview state.
-- Capture source and target groups directly from PCB selection.
-- Match by connectivity and apply one placement to multiple targets.
-- Preview mappings, positions and angles; rotation and centre-only reflection.
-- Remove selected targets or remove all targets while retaining the source.
-- Native KiCad undo; no automatic board save.
+Windows / KiCad 10.0 testing release, verified with KiCad 10.0.5.
+85 development tests passed. Disposable native KiCad tests covered geometry transfer,
+rollback, Undo/Redo and placement; opposite-side tests were compared with an independent
+KiCad C++ flip oracle, including asymmetric and custom pads. Other OS platforms remain unverified.
 
 ## Install
 
-Download **Layout_Clone-0.2.1-pcm.zip**, then use KiCad's Plugin and Content
-Manager → **Install from File…**. Enable the API server in Preferences →
-Common → API. Initial dependency installation requires internet access.
-Close the schematic editor before applying; this release guards against a
-reported KiCad 10 IPC transaction crash. Read the README for limits and DRC.
+Download **Layout_Clone-0.3.1-pcm.zip**, then use KiCad **Plugin and Content Manager → Install from File…**.
+Enable **Preferences → Common → API**. Close other PCB and schematic editors before applying.
+Targets must have matching unique pad-number sets; pad addition/deletion/renumbering is unsupported.
+Read the usage notes for the complete scope. Run DRC after applying.
 
-If upgrading from the private manual build `com.sharkesc.layout-clone`, back up
-and remove the old plugin installation before using this community PCM package
-to avoid duplicate actions.
+If moving from the legacy manual `com.sharkesc.layout-clone` installation, back up and remove it
+before installing this PCM package to avoid duplicate toolbar entries.
+Later **Update Footprints from Library** can overwrite project-local edits.
 
-The default KiCad PCM catalogue listing requires a separate maintainer-reviewed
-metadata submission; this release alone does **not** mean it is listed there.
+This is a **prerelease**. Default PCM catalogue availability remains subject to KiCad maintainer review.
 
-[English documentation](https://github.com/MEY-26/kicad-layout-clone#readme) ·
-[Türkçe açıklama](https://github.com/MEY-26/kicad-layout-clone/blob/main/README.tr.md) ·
-[Issue tracker](https://github.com/MEY-26/kicad-layout-clone/issues)
+[English usage](https://github.com/MEY-26/kicad-layout-clone/blob/main/FOOTPRINT_EDITS.md) ·
+[Türkçe kullanım](https://github.com/MEY-26/kicad-layout-clone/blob/main/FOOTPRINT_EDITS.tr.md) ·
+[Issues](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-Validation: 22 public-source/package tests passed, including toolbar icon sizes,
-manifest references and reproducible packaging. The 0.2.0 development build
-passed 58 tests. Linux/macOS and a new real-server placement test for 0.2.1
-remain unverified. The installed toolbar still needs visual confirmation after
-reopening the PCB Editor.
-This is a **prerelease**; use a disposable board copy for your first trial.
-MIT licensed. SHA-256 checksums are included in `SHA256SUMS.txt`.
+## Türkçe
+
+Yeni **Footprint Düzenlemeleri** sekmesi, PCB’de elle düzenlediğin bir footprintin padlerini
+ve çizimlerini seçtiğin hedeflere aktarır. Orijinal kütüphane değişmez; hedefin konumu,
+açısı, yüzü, referansı ve ağları korunur. Ön/arka yüzler arası aktarım desteklenir.
+Türkçe etiket kesilmesi giderildi. Kaynak ve hedefleri PCB’den al, kapsamı seç,
+önizlemeyi kontrol et ve uygula; tüm işlem tek Undo ile geri alınabilir.
+Kurulum için PCM ZIP’ini **Dosyadan yükle…** ile seç. Resmi katalog başvurusu inceleme bekler.
+
+MIT licensed. Archive SHA-256 is included in **SHA256SUMS.txt**.

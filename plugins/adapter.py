@@ -50,6 +50,7 @@ class Snapshot:
     groups: dict
     selected: tuple
     board_key: str
+    copper_count: int = 2
 
     @property
     def stamp(self):
@@ -176,6 +177,13 @@ class KiCadAdapter:
                 return False
             raise
 
+    def edits_snapshot(self):
+        snapshot = self.snapshot()
+        snapshot.copper_count = self.request('bakır katman sayısını okuma', self.board.get_copper_layer_count)
+        if not 2 <= snapshot.copper_count <= 32 or snapshot.copper_count % 2:
+            raise LayoutError('Kartın bakır katman sayısı doğrulanamadı.')
+        return snapshot
+
     def check_write_context(self):
         # kipy 0.7.1 BeginCommit has no document selector. In KiCad 10.0.5
         # an open schematic can receive this board transaction and crash the
@@ -226,15 +234,7 @@ class KiCadAdapter:
             if current_side != pose.side:
                 raise LayoutError('Kart yüzü önizlemeden sonra değişti: ' + pose.ref)
             updates.append(moved_footprint(original, pose))
-        self.check_write_context()
-        commit = None
-        phase = 'başlatma'
-        try:
-            # Do not reuse GUI-cached wrappers: retain current target metadata,
-            # nets, pad UUIDs, texts, models and custom footprint geometry.
-            commit = self.request('taşıma işlemini başlatma', self.board.begin_commit)
-            phase = 'güncelleme'
-            results = self.request('komponent yerleşimini güncelleme', self.board.update_items, updates)
+        def verify(results):
             by_id = {uid(fp): fp for fp in results if isinstance(fp, FootprintInstance)}
             if set(by_id) != {p.uid for p in poses}:
                 raise LayoutError('KiCad tüm komponentleri güncelleyemedi.')
@@ -253,9 +253,41 @@ class KiCadAdapter:
                         or actual.pins != prior.pins or actual.kind != prior.kind
                         or not models_ok or not pads_ok):
                     raise LayoutError('KiCad istenen yerleşimi doğrulamadı: ' + pose.ref)
+        self.write_transaction(updates, verify, 'Yerleşim Kopyala: bağlantıya göre grup yerleşimi')
+        return len(poses)
+
+    def apply_edits(self, plan):
+        from footprint_edits import plan_edits, verify_result
+        if self.needs_restart:
+            raise LayoutError('Önceki işlemin iptali doğrulanamadı. PCB yerleşimini kontrol et; '
+                              'KiCad PCB düzenleyicisini yeniden açtıktan sonra tekrar dene.')
+        before = self.edits_snapshot()
+        fresh = plan_edits(before, plan.source, plan.targets, plan.options)
+        if fresh.stamp != plan.stamp:
+            raise LayoutError('PCB önizlemeden sonra değişti. Önizlemeyi yeniden oluştur.')
+        if fresh.rejected or not fresh.updates:
+            raise LayoutError('Uyumsuz hedefleri kaldırıp yeniden önizle.')
+        def verify(results):
+            actual = {uid(fp): fp for fp in results if isinstance(fp, FootprintInstance)}
+            if len(results) != len(fresh.updates) or set(actual) != {uid(fp) for fp in fresh.updates}:
+                raise LayoutError('KiCad tüm komponentleri güncelleyemedi.')
+            for expected in fresh.updates:
+                verify_result(expected, actual[uid(expected)])
+        self.write_transaction(fresh.updates, verify, 'Yerleşim Kopyala: footprint düzenlemeleri')
+        return len(fresh.updates)
+
+    def write_transaction(self, updates, verify, description):
+        """Both tabs use the same guarded transaction and uncertain-reply recovery."""
+        self.check_write_context()
+        commit = None
+        phase = 'başlatma'
+        try:
+            commit = self.request('taşıma işlemini başlatma', self.board.begin_commit)
+            phase = 'güncelleme'
+            results = self.request('komponent yerleşimini güncelleme', self.board.update_items, updates)
+            verify(results)
             phase = 'tamamlama'
-            self.request('taşıma işlemini tamamlama', self.board.push_commit, commit,
-                         tr('Yerleşim Kopyala: bağlantıya göre grup yerleşimi'))
+            self.request('taşıma işlemini tamamlama', self.board.push_commit, commit, tr(description))
         except KiCadConnectionError as error:
             failed_stage, duration = self.last_stage, self.last_duration
             try:
@@ -287,4 +319,3 @@ class KiCadAdapter:
                     raise LayoutError(f'Taşıma başarısız: {error}. İptal doğrulanamadı: '
                                       f'{cleanup_error}. PCB yerleşimini kontrol et.') from error
             raise
-        return len(poses)

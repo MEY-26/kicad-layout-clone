@@ -8,12 +8,20 @@ groups. Parts are matched using footprint identity, value and pad connectivity.
 Positions and orientations are transferred relative to an anchor, even when
 reference numbers and local net names differ.
 
-**0.2.1 · MIT · English and Turkish · KiCad IPC API**
+**0.3.1 · MIT · English and Turkish · KiCad IPC API**
+
+Two separate tabs: **Placement** copies positions/angles; **Footprint Edits**
+copies project-local pad geometry and footprint graphics while preserving target
+placement, identity and nets. See [Footprint Edits usage and scope](FOOTPRINT_EDITS.md).
 
 [Türkçe](README.tr.md) · [Releases](https://github.com/MEY-26/kicad-layout-clone/releases) · [Issues](https://github.com/MEY-26/kicad-layout-clone/issues)
 
+![Footprint Edits in English](https://github.com/MEY-26/kicad-layout-clone/blob/main/docs/footprint-edits-0.3.1-en.png)
+
 ## Features
 
+- Copy project-local pad geometry, footprint graphics and optional reference/value
+  formatting with **Footprint Edits**, including front/back conversion.
 - Capture source and target footprints directly from PCB selection. Only the
   selected footprints are included; selections are never automatically expanded.
 - Apply one source placement to multiple target groups in one operation.
@@ -31,7 +39,7 @@ This community release targets **Windows and KiCad 10.0**. Tested with KiCad
 **10.0.5**, Python 3.11, `kicad-python==0.7.1` and `wxPython==4.2.2`.
 Linux/macOS have not been verified and are excluded from the PCM platform list.
 
-1. Download `Layout_Clone-0.2.1-pcm.zip` from the release page.
+1. Download `Layout_Clone-0.3.1-pcm.zip` from the [release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.1).
 2. In the KiCad Project Manager, open **Plugin and Content Manager**, then
    **Install from File…** and select the ZIP.
 3. Enable the API server in KiCad Preferences under **Common → API**. Configure
@@ -49,7 +57,7 @@ back up and remove that legacy installation before installing the PCM version
 to avoid duplicate toolbar entries. The community package identifier is
 `com.github.mey-26.kicad-layout-clone`.
 
-## Workflow
+## Placement workflow
 
 1. Select **all source-group footprints** in the PCB Editor. Open the plugin
    or click **1 · Capture PCB source selection**. Choose the source anchor.
@@ -72,7 +80,7 @@ Changing the source clears earlier targets and previews.
 target list. They do not delete footprints or undo an applied placement.
 The language selector is in the upper-right corner.
 
-## Rotation and matching
+## Placement rotation and matching
 
 At **0° additional rotation**, the target anchor keeps its position and angle.
 Additional rotation rotates the group around the target anchor's centre.
@@ -88,7 +96,7 @@ Kelvin shunts retain paired sense and power ends.
 
 ## Limits and troubleshooting
 
-- Only existing footprint positions and angles change. Tracks, vias, zones
+- In the Placement tab, only existing footprint positions and angles change. Tracks, vias, zones
   and net assignments are not copied or rerouted.
 - Preview shows centres and directions, without collision or copper-clearance
   checks. Run DRC after placement.
@@ -117,9 +125,10 @@ shareable example. Do not upload private boards unless you intend to publish the
 
 The public repository includes synthetic matching and language tests, package
 validation and a reproducible PCM builder. The development workspace also has
-Windows wx/adapter tests; 0.2.0 passed 58 tests there, including language changes
-with preview state preserved. Earlier placement builds were exercised on an
-isolated real KiCad board copy. Other platforms and a new real-server placement
-run specifically for 0.2.0 have not been independently verified.
+Windows wx/adapter tests. Version 0.3.1 includes geometry-transfer, selection,
+localization and transaction regression tests. A disposable real KiCad 10.0.5
+PCB verified geometry changes, a 37° target, native rollback and one-step
+Undo/Redo, as well as the existing placement path. Live project files were not
+modified. Other platforms have not been verified.
 
 MIT license: [LICENSE](LICENSE).
