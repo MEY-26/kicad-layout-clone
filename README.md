@@ -12,7 +12,7 @@ reference numbers and local net names differ.
 
 [Türkçe](README.tr.md) · [Releases](https://github.com/MEY-26/kicad-layout-clone/releases) · [Issues](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-![Layout Clone preview](docs/preview.png)
+![Layout Clone 0.2.0 English interface](docs/preview.png)
 
 ## Features
 
