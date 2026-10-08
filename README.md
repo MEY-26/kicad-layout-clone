@@ -8,7 +8,7 @@ groups. Parts are matched using footprint identity, value and pad connectivity.
 Positions and orientations are transferred relative to an anchor, even when
 reference numbers and local net names differ.
 
-**0.2.0 · MIT · English and Turkish · KiCad IPC API**
+**0.2.1 · MIT · English and Turkish · KiCad IPC API**
 
 [Türkçe](README.tr.md) · [Releases](https://github.com/MEY-26/kicad-layout-clone/releases) · [Issues](https://github.com/MEY-26/kicad-layout-clone/issues)
 
@@ -33,7 +33,7 @@ This community release targets **Windows and KiCad 10.0**. Tested with KiCad
 **10.0.5**, Python 3.11, `kicad-python==0.7.1` and `wxPython==4.2.2`.
 Linux/macOS have not been verified and are excluded from the PCM platform list.
 
-1. Download `Layout_Clone-0.2.0-pcm.zip` from the release page.
+1. Download `Layout_Clone-0.2.1-pcm.zip` from the release page.
 2. In the KiCad Project Manager, open **Plugin and Content Manager**, then
    **Install from File…** and select the ZIP.
 3. Enable the API server in KiCad Preferences under **Common → API**. Configure

@@ -3,7 +3,7 @@
 [English](PUBLISHING.md)
 
 Yayın projesi `MEY-26/kicad-layout-clone`, paket kimliği
-`com.github.mey-26.kicad-layout-clone`. 0.2.0, Windows için test sürümüdür.
+`com.github.mey-26.kicad-layout-clone`. 0.2.1, Windows için test sürümüdür.
 
 ## Güncel başvuru
 
@@ -24,7 +24,7 @@ KiCad ekibinin incelemesi bekleniyor.
 
 Depo kökünde `python build_pcm.py` çalıştırıldığında:
 
-- `dist/Layout_Clone-0.2.0-pcm.zip`: PCM'de Install from File ile kurulacak paket.
+- `dist/Layout_Clone-0.2.1-pcm.zip`: PCM'de Install from File ile kurulacak paket.
 - `dist/SHA256SUMS.txt`: paketin bütünlük özeti.
 - `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
   indirme bağlantısı, hash ve boyutları içeren resmi depo başvuru dosyası.
@@ -32,7 +32,7 @@ Depo kökünde `python build_pcm.py` çalıştırıldığında:
 
 ZIP içindeki metadata indirme alanlarını içermez. `runtime: ipc` alanı paketin
 eski SWIG eklentisi sayılmasını önler. ZIP ve checksum dosyalarını GitHub'da
-`v0.2.0` etiketli herkese açık sürüme ekle. Giriş yapmadan indirilebildiğini ve
+`v0.2.1` etiketli herkese açık sürüme ekle. Giriş yapmadan indirilebildiğini ve
 SHA256SUMS ile eşleştiğini kontrol et. Başvuru sonrasında paketi değiştirmek
 yerine yeni bir sürüm çıkar.
 

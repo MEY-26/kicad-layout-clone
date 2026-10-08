@@ -3,7 +3,7 @@
 [Türkçe](PUBLISHING.tr.md)
 
 The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
-`com.github.mey-26.kicad-layout-clone`. Version 0.2.0 is a Windows testing release.
+`com.github.mey-26.kicad-layout-clone`. Version 0.2.1 is a Windows testing release.
 
 ## Current submission
 
@@ -24,7 +24,7 @@ test. GitLab CI artifacts may expire. KiCad maintainer review is pending.
 
 Run `python build_pcm.py` at the repository root. It produces:
 
-- `dist/Layout_Clone-0.2.0-pcm.zip`: installable through PCM's Install from File.
+- `dist/Layout_Clone-0.2.1-pcm.zip`: installable through PCM's Install from File.
 - `dist/SHA256SUMS.txt`: archive integrity hash.
 - `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
   official-repository metadata containing the download URL, hash and sizes.
@@ -33,7 +33,7 @@ Run `python build_pcm.py` at the repository root. It produces:
 
 The ZIP's metadata deliberately omits download fields. The version declares
 `runtime: ipc`, preventing it from being treated as a legacy SWIG plugin.
-Upload the ZIP and checksum to the public GitHub release tagged `v0.2.0`.
+Upload the ZIP and checksum to the public GitHub release tagged `v0.2.1`.
 Verify that the download works without signing in and matches SHA256SUMS.
 Do not replace an archive after its hash is submitted; publish a new version.
 

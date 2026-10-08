@@ -11,7 +11,8 @@ import re
 import zipfile
 
 FILES = ('plugin.json', 'requirements.txt', 'main.py', 'core.py', 'adapter.py',
-         'gui.py', 'i18n.py', 'icon.png', 'icon.svg', 'README.md', 'README.tr.md', 'LICENSE')
+         'gui.py', 'i18n.py', 'icon.png', 'icon.svg', 'toolbar-24.png', 'toolbar-48.png',
+         'README.md', 'README.tr.md', 'LICENSE')
 
 
 def build(root=None, output=None):

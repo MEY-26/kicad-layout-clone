@@ -5,15 +5,33 @@
   "description_full": "Replicate one footprint layout across multiple repeated circuits. Select source and target groups directly in the PCB Editor, match parts using pad connectivity, inspect mappings and apply anchor-relative positions and angles. Includes rotation, centre-only reflection and English/Turkish language switching (English by default). Uses the KiCad IPC API and native undo. Does not copy or reroute tracks, vias or zones; run DRC after placement. This testing release targets Windows / KiCad 10.0 and blocks writes when the schematic editor is open because of reported KiCad IPC transaction crashes. See the project README for installation, limitations and troubleshooting.",
   "identifier": "com.github.mey-26.kicad-layout-clone",
   "type": "plugin",
-  "author": {"name": "Mehmet Emin Yaman", "contact": {"web": "https://github.com/MEY-26"}},
+  "author": {
+    "name": "Mehmet Emin Yaman",
+    "contact": {
+      "web": "https://github.com/MEY-26"
+    }
+  },
   "license": "MIT",
   "resources": {
     "homepage": "https://github.com/MEY-26/kicad-layout-clone",
     "issues": "https://github.com/MEY-26/kicad-layout-clone/issues"
   },
-  "tags": ["placement", "replication", "layout", "ipc"],
-  "versions": [{
-    "version": "0.2.0", "status": "testing", "kicad_version": "10.0",
-    "kicad_version_max": "10.0", "runtime": "ipc", "platforms": ["windows"]
-  }]
+  "tags": [
+    "placement",
+    "replication",
+    "layout",
+    "ipc"
+  ],
+  "versions": [
+    {
+      "version": "0.2.1",
+      "status": "testing",
+      "kicad_version": "10.0",
+      "kicad_version_max": "10.0",
+      "runtime": "ipc",
+      "platforms": [
+        "windows"
+      ]
+    }
+  ]
 }

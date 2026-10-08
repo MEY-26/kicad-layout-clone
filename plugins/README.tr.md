@@ -8,7 +8,7 @@ seçersin. Parçalar kılıf, değer ve pad bağlantılarıyla eşleştirilir. K
 yönler referans komponente göre aktarılır; referans numaraları ve yerel ağ
 adları farklı olabilir.
 
-**0.2.0 · MIT · İngilizce ve Türkçe · KiCad IPC API**
+**0.2.1 · MIT · İngilizce ve Türkçe · KiCad IPC API**
 
 [English](README.md) · [Sürümler](https://github.com/MEY-26/kicad-layout-clone/releases) · [Hata bildir](https://github.com/MEY-26/kicad-layout-clone/issues)
 
@@ -32,7 +32,7 @@ Bu topluluk sürümü **Windows ve KiCad 10.0** içindir. KiCad **10.0.5**,
 Python 3.11, `kicad-python==0.7.1` ve `wxPython==4.2.2` ile sınandı.
 Linux/macOS doğrulanmadığından PCM platform listesinde bulunmuyor.
 
-1. Sürüm sayfasından `Layout_Clone-0.2.0-pcm.zip` dosyasını indir.
+1. Sürüm sayfasından `Layout_Clone-0.2.1-pcm.zip` dosyasını indir.
 2. KiCad Proje Yöneticisi'nde **Plugin and Content Manager** bölümünü aç;
    **Install from File…** ile ZIP'i seç.
 3. KiCad Tercihleri'nde **Common → API** altındaki API sunucusunu etkinleştir.

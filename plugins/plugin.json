@@ -18,10 +18,12 @@
       ],
       "entrypoint": "main.py",
       "icons-light": [
-        "icon.png"
+        "toolbar-24.png",
+        "toolbar-48.png"
       ],
       "icons-dark": [
-        "icon.png"
+        "toolbar-24.png",
+        "toolbar-48.png"
       ]
     }
   ]

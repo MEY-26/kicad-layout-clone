@@ -40,7 +40,7 @@ class PCMTests(unittest.TestCase):
             published = submission['versions'][0]
             self.assertEqual(published['download_sha256'], hashlib.sha256(archive.read_bytes()).hexdigest())
             self.assertEqual(published['download_size'], archive.stat().st_size)
-            self.assertTrue(published['download_url'].endswith('/v0.2.0/'+archive.name))
+            self.assertTrue(published['download_url'].endswith('/v'+published['version']+'/'+archive.name))
 
     def test_build_is_reproducible(self):
         with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
