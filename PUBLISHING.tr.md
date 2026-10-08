@@ -9,13 +9,13 @@ Yayın projesi `MEY-26/kicad-layout-clone`, paket kimliği
 
 [Resmi metadata başvurusu !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
 8 Ekim 2026 tarihinde açıldı ve KiCad ekibinin incelemesine hazır duruma getirildi.
-Hesap doğrulamasından sonra [merge doğrulaması](https://gitlab.com/MEY-26/metadata/-/pipelines/2925946387)
-ve [fork doğrulama/katalog oluşturma işleri](https://gitlab.com/MEY-26/metadata/-/pipelines/2925943705)
+Hesap doğrulamasından sonra [merge doğrulaması](https://gitlab.com/MEY-26/metadata/-/pipelines/2925996678)
+ve [fork doğrulama/katalog oluşturma işleri](https://gitlab.com/MEY-26/metadata/-/pipelines/2925996601)
 geçti. Üretilen test kataloğunun paket/simge hash'leri ve sürüm arşivinin
 hash/boyutu da doğrulandı. Bu durum, eklenti kataloğuna kabul edildiği anlamına
 gelmiyor. Üretilen katalogdan PCM arayüzü üzerinden kurulum henüz doğrulanmadı.
 
-[Geçici v2 PCM test deposu](https://gitlab.com/MEY-26/metadata/-/jobs/17026339881/artifacts/raw/artifacts/repository.json),
+[Geçici v2 PCM test deposu](https://gitlab.com/MEY-26/metadata/-/jobs/17026708950/artifacts/raw/artifacts/repository.json),
 ayrı KiCad yapılandırmasında kurulum denemek için PCM'deki Manage Repositories
 alanına eklenebilir. GitLab CI dosyalarının süresi dolabilir.
 KiCad ekibinin incelemesi bekleniyor.
