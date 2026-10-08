@@ -5,6 +5,16 @@
 Yayın projesi `MEY-26/kicad-layout-clone`, paket kimliği
 `com.github.mey-26.kicad-layout-clone`. 0.2.0, Windows için test sürümüdür.
 
+## Güncel başvuru
+
+[Resmi metadata başvurusu !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
+8 Ekim 2026 tarihinde açıldı. GitLab yeni hesap için ek kimlik doğrulaması
+istediğinden CI bekleyen taslak durumunda. Resmi paket ve simge doğrulayıcıları
+yerelde geçti; fork'taki dosyalar bu başvuruyla karşılaştırıldı. Bu durum,
+eklenti kataloğuna kabul edildiği anlamına gelmiyor. Hesap doğrulandıktan sonra
+fork pipeline'ını tekrar çalıştırıp üretilen test deposuyla PCM kurulumunu
+kontrol etmek ve başvuruyu incelemeye hazır duruma getirmek gerekiyor.
+
 ## Sürüm dosyaları
 
 Depo kökünde `python build_pcm.py` çalıştırıldığında:

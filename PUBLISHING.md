@@ -5,6 +5,16 @@
 The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
 `com.github.mey-26.kicad-layout-clone`. Version 0.2.0 is a Windows testing release.
 
+## Current submission
+
+[Official metadata merge request !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
+was opened on 8 October 2026. It is a draft pending GitLab CI because GitLab
+requires additional identity verification for the new maintainer account.
+The official package and image validators passed locally; fork files were
+verified against that submission. This is not an accepted catalogue listing.
+After account verification, rerun the fork pipeline, complete the PCM smoke
+test using its generated test repository, and mark the MR ready for review.
+
 ## Release artifacts
 
 Run `python build_pcm.py` at the repository root. It produces:
