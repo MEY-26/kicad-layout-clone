@@ -9,7 +9,7 @@ Yayın projesi `MEY-26/kicad-layout-clone`, paket kimliği
 
 [Resmi metadata başvurusu !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
 8 Ekim 2026 tarihinde açıldı ve KiCad ekibinin incelemesine hazır duruma getirildi.
-Kaynak dalı 0.3.1 sürümüne güncelleniyor. Bu durum, varsayılan kataloğa kabul edildiği anlamına gelmez.
+Kaynak dalı 0.3.1 sürümüne güncellendi ve [merge request doğrulaması](https://gitlab.com/MEY-26/metadata/-/pipelines/2926550631) geçti. Bu durum, varsayılan kataloğa kabul edildiği anlamına gelmez.
 Üretilen PCM kataloğundan arayüz üzerinden kurulum henüz doğrulanmadı.
 
 ## Sürüm dosyaları

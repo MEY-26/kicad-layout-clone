@@ -9,7 +9,7 @@ The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
 
 [Official metadata merge request !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
 was opened on 8 October 2026 and is ready for KiCad maintainer review.
-The source branch is being updated for 0.3.1. This is not an accepted catalogue listing.
+The source branch now contains 0.3.1 and the [merge-request validation pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2926550631) passed. This is not an accepted catalogue listing.
 Installation from the generated PCM catalogue has not been verified.
 
 ## Release artifacts
