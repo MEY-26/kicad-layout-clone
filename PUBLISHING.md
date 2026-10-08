@@ -8,12 +8,17 @@ The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
 ## Current submission
 
 [Official metadata merge request !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
-was opened on 8 October 2026. It is a draft pending GitLab CI because GitLab
-requires additional identity verification for the new maintainer account.
-The official package and image validators passed locally; fork files were
-verified against that submission. This is not an accepted catalogue listing.
-After account verification, rerun the fork pipeline, complete the PCM smoke
-test using its generated test repository, and mark the MR ready for review.
+was opened on 8 October 2026 and is ready for KiCad maintainer review.
+[Merge validation](https://gitlab.com/MEY-26/metadata/-/pipelines/2925946387)
+and [fork validation/build](https://gitlab.com/MEY-26/metadata/-/pipelines/2925943705)
+passed after account verification. The generated test catalogue's package and
+resources hashes and the release archive hash/size were also verified.
+This is not an accepted catalogue listing. Installation through the PCM UI
+from the generated catalogue has not yet been verified.
+
+[Temporary v2 PCM test repository](https://gitlab.com/MEY-26/metadata/-/jobs/17026339881/artifacts/raw/artifacts/repository.json)
+can be added in PCM's Manage Repositories for a separate-configuration smoke
+test. GitLab CI artifacts may expire. KiCad maintainer review is pending.
 
 ## Release artifacts
 
