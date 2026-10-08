@@ -12,7 +12,7 @@ adları farklı olabilir.
 
 [English](README.md) · [Sürümler](https://github.com/MEY-26/kicad-layout-clone/releases) · [Hata bildir](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-![Layout Clone 0.2.0 İngilizce arayüzü](docs/preview.png)
+![Layout Clone 0.2.0 İngilizce arayüzü](docs/layout-clone-0.2.0.png)
 
 ## Özellikler
 
