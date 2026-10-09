@@ -177,7 +177,11 @@ class FootprintEditsPanel(wx.Panel):
         from footprint_edits import graphics
         lines = [tr('Kaynak') + ': ' + self.plan.source + ' (' + self.plan.source_side + ')',
                  tr('Hedef') + ': ' + ', '.join(self.plan.targets), '']
-        lines.append(tr('Her hedef mevcut konumunda ve açısında kalır. Pad numaraları birebir eşleştirilir.'))
+        lines.append(tr('Her hedef mevcut konumunda ve açısında kalır.'))
+        if self.plan.options.pads:
+            lines.append(tr('Numaralı padler numaralarına, pasta açıklıkları bağlı oldukları padlere göre eşleştirilir.'))
+        else:
+            lines.append(tr('Pad geometrisi ve ayarları korunur; pad eşleştirmesi yapılmaz.'))
         lines.append(tr('Aktarılacak kapsam') + ': ' + ', '.join(tr(label) for enabled, label in (
             (self.plan.options.pads, 'Pad geometrisi ve ayarları'),
             (self.plan.options.graphics, 'Footprint çizimleri ve serbest metinler'),

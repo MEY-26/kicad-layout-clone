@@ -2,7 +2,7 @@
   "$schema": "https://go.kicad.org/pcm/schemas/v2",
   "name": "Layout Clone",
   "description": "Copy repeated-circuit placement and project-local footprint edits with explicit PCB selection. English and Turkish UI.",
-  "description_full": "Layout Clone has separate Placement and Footprint Edits tabs. Copy anchor-relative placements or project-local pad geometry and footprint graphics to explicitly selected PCB targets. Preserve target identity, placement, schematic linkage and pad nets. Includes previews, opt-in similarity suggestions, English/Turkish UI and native undo. Footprint edits require matching unique pad-number sets; opposite-side targets receive a KiCad-compatible geometry reflection and layer conversion. No library or schematic changes; no auto-save. Windows / KiCad 10.0 testing release. Close other PCB and schematic editors before applying. See the bundled usage notes.",
+  "description_full": "Layout Clone has separate Placement and Footprint Edits tabs. Copy anchor-relative placements or project-local pad geometry and footprint graphics to explicitly selected PCB targets. Preserve target identity, placement, schematic linkage and pad nets. Includes previews, opt-in similarity suggestions, English/Turkish UI and native undo. Pad edits require matching unique numbered pads and unambiguous paste apertures; graphics-only edits preserve pads without matching them; opposite-side targets receive a KiCad-compatible geometry reflection and layer conversion. No library or schematic changes; no auto-save. Windows / KiCad 10.0 testing release. Close other PCB and schematic editors before applying. See the bundled usage notes.",
   "identifier": "com.github.mey-26.kicad-layout-clone",
   "type": "plugin",
   "author": {
@@ -24,7 +24,7 @@
   ],
   "versions": [
     {
-      "version": "0.3.1",
+      "version": "0.3.2",
       "status": "testing",
       "kicad_version": "10.0",
       "kicad_version_max": "10.0",

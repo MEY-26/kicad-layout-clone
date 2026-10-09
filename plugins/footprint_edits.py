@@ -6,6 +6,7 @@ to the target. Pure planning; this module does not open or save a board.
 """
 from dataclasses import dataclass
 import hashlib
+import math
 import uuid
 
 from kipy.board_types import (FootprintInstance, Pad, BoardShape, BoardText,
@@ -45,12 +46,44 @@ def geometry_stamp(objects, refs):
 
 def pad_map(fp):
     result = {}
+    unnumbered = []
     for pad in fp.definition.pads:
+        if not pad.number:
+            if pad.net.name or pad.proto.net.code.value:
+                raise LayoutError('Numarasız pad bir ağa bağlı; aktarım engellendi.')
+            unnumbered.append(pad)
+            continue
         if pad.number in result:
             raise LayoutError('Yinelenen veya birden fazla numarasız pad güvenle eşleştirilemiyor.')
-        if not pad.number and pad.net.name:
-            raise LayoutError('Numarasız pad bir ağa bağlı; aktarım engellendi.')
         result[pad.number] = pad
+    mechanical = []
+    paste_layers = {BoardLayer.BL_F_Paste: BoardLayer.BL_F_Cu,
+                    BoardLayer.BL_B_Paste: BoardLayer.BL_B_Cu}
+    for pad in unnumbered:
+        layers = set(pad.proto.pad_stack.layers)
+        if len(layers) != 1 or not layers <= paste_layers.keys():
+            mechanical.append(pad)
+            continue
+        layer = next(iter(layers))
+        # Separate paste apertures in standard small SMD footprints have no
+        # numbers. Associate one aperture per layer with its uniquely nearest
+        # numbered copper pad, independent of item order, position and rotation.
+        candidates = sorted((math.hypot(pad.position.x - anchor.position.x,
+                                        pad.position.y - anchor.position.y), number)
+                            for number, anchor in result.items()
+                            if isinstance(number, str) and number
+                            and paste_layers[layer] in anchor.proto.pad_stack.layers)
+        if not candidates or (len(candidates) > 1 and candidates[1][0] - candidates[0][0] <= 3):
+            raise LayoutError('Numarasız pasta açıklığının bağlı olduğu pad belirsiz; aktarım engellendi.')
+        same_side = layer == (BoardLayer.BL_B_Paste if fp.layer == BoardLayer.BL_B_Cu else BoardLayer.BL_F_Paste)
+        key = ('paste', candidates[0][1], same_side)
+        if key in result:
+            raise LayoutError('Aynı pade bağlı birden fazla pasta açıklığı güvenle eşleştirilemiyor.')
+        result[key] = pad
+    if len(mechanical) > 1:
+        raise LayoutError('Yinelenen veya birden fazla numarasız pad güvenle eşleştirilemiyor.')
+    if mechanical:
+        result[''] = mechanical[0]
     return result
 
 
@@ -80,9 +113,10 @@ def transfer(source, target, options, copper_count=2):
         raise LayoutError('Kilitli komponent: ' + target.reference_field.text.value)
     if not (options.pads or options.graphics or options.field_format):
         raise LayoutError('En az bir aktarım seçeneği seç.')
-    src_pads, dst_pads = pad_map(source), pad_map(target)
-    if set(src_pads) != set(dst_pads):
-        raise LayoutError('Kaynak ve hedef pad numaraları farklı; pad ekleme/silme yapılmaz.')
+    if options.pads:
+        src_pads, dst_pads = pad_map(source), pad_map(target)
+        if set(src_pads) != set(dst_pads):
+            raise LayoutError('Kaynak ve hedef pad eşleşmeleri farklı; pad ekleme/silme yapılmaz.')
     if options.graphics:
         if any(item.layer not in GRAPHIC_LAYERS for fp in (source, target) for item in graphics(fp)):
             raise LayoutError('Bakır veya desteklenmeyen katmanda çizim var; çizim aktarımı engellendi.')
@@ -95,13 +129,13 @@ def transfer(source, target, options, copper_count=2):
     transformed = moved_footprint(template, Pose(ref, target.id.value,
         target.position.x / 1e6, target.position.y / 1e6,
         target.orientation.degrees, side, source.reference_field.text.value))
-    aligned = pad_map(transformed)
     updated = FootprintInstance(target.proto)
     # Change only the geometry subset. Target symbol-pin metadata, UUID,
     # number, lock and complete net message remain intact.
     if options.pads:
-        for pad in updated.definition.pads:
-            origin = aligned[pad.number].proto
+        aligned = pad_map(transformed)
+        for key, pad in pad_map(updated).items():
+            origin = aligned[key].proto
             for name in ('type', 'pad_stack', 'position', 'copper_clearance_override'):
                 field = origin.DESCRIPTOR.fields_by_name[name]
                 if field.message_type:
@@ -111,7 +145,7 @@ def transfer(source, target, options, copper_count=2):
                         pad.proto.ClearField(name)
                 else:
                     setattr(pad.proto, name, getattr(origin, name))
-            prior_layers = {layer.layer: layer for layer in dst_pads[pad.number].proto.pad_stack.copper_layers}
+            prior_layers = {layer.layer: layer for layer in dst_pads[key].proto.pad_stack.copper_layers}
             for layer in pad.proto.pad_stack.copper_layers:
                 previous = prior_layers.get(layer.layer)
                 for index, primitive in enumerate(layer.custom_shapes):
@@ -164,7 +198,8 @@ def plan_edits(snapshot, source, targets, options=EditOptions()):
             original = snapshot.objects[ref]
             update = transfer(snapshot.objects[source], original, options, snapshot.copper_count)
             updates.append(update)
-            changes = sum(p.proto.SerializeToString() != pad_map(original)[p.number].proto.SerializeToString()
+            original_pads = {p.id.value: p for p in original.definition.pads}
+            changes = sum(p.proto.SerializeToString() != original_pads[p.id.value].proto.SerializeToString()
                           for p in update.definition.pads)
             rows.append((ref, changes, len(graphics(original)), len(graphics(update))))
         except LayoutError as error:

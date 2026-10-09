@@ -1,4 +1,4 @@
-# Footprint Düzenlemeleri — Layout Clone 0.3.1
+# Footprint Düzenlemeleri — Layout Clone 0.3.2
 
 [English](FOOTPRINT_EDITS.md)
 
@@ -54,12 +54,19 @@ tüm hedefleri kaldırabilirim; kaynak korunur. İki sekmenin kaynak/hedef liste
 
 ## Uyumluluk ve kontroller
 
-Kaynak ve hedefin **pad numarası kümeleri aynı** olmalıdır. Ön yüzden arkaya
+Pad aktarımı seçiliyse kaynak ve hedefin **pad eşleşmeleri aynı** olmalıdır. Ön yüzden arkaya
 ve arkadan öne aktarım desteklenir: yerel geometri KiCad kurallarına göre
 yansıtılır, ön/arka katmanlar dönüştürülür. Hedefin yüzü ve açısı korunur. İç bakır
 katmanları güncel kartın bakır katman sayısına göre eşleştirilir.
-Tek bir numarasız, ağa bağlı olmayan mekanik pad desteklenir. Birden fazla
-numarasız pad veya yinelenen pad numarası belirsiz eşleşme nedeniyle engellenir.
+Numaralı padler benzersiz numaralarıyla eşleştirilir. Yalnız pasta katmanında
+bulunan, ağa bağlı olmayan açıklıklar en yakın numaralı bakır pad ve göreli kart
+yüzüyle eşleştirilir; her pad ve pasta katmanı için bir açıklık desteklenir.
+Böylece küçük SMD dirençlerdeki ayrı pasta padleri de aktarılabilir. Belirsiz
+eşleşmeler ve yinelenen numaralı padler engellenir. Ayrıca tek bir numarasız,
+ağa bağlı olmayan mekanik pad desteklenir. Yalnız çizim veya alan biçimi
+aktarılırken pad eşleştirmesi yapılmaz; hedef padler aynen korunur.
+Courtyard/çizimleri padlere dokunmadan aktarmak için **Pad geometrisi ve ayarları**
+seçeneğini kapatırım.
 Pad ekleme/silme/yeniden numaralandırma bu sürümün kapsamı dışındadır.
 Kilitli hedefler, bilinmeyen footprint alt öğeleri ve bakır/desteklenmeyen
 katmandaki çizimler engellenir. Bakır çizim varsa çizim aktarımını kapatıp yalnız
@@ -77,8 +84,8 @@ iptal doğrulanamazsa PCB düzenleyicisi yeniden açılana kadar yazma engelleni
 
 ## Kurulum ve doğrulama
 
-[Sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.1)
-`Layout_Clone-0.3.1-pcm.zip` paketini indirip PCM’nin **Dosyadan yükle…**
+[Sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.2)
+`Layout_Clone-0.3.2-pcm.zip` paketini indirip PCM’nin **Dosyadan yükle…**
 seçeneğiyle kurarım. Topluluk PCM paketine geçmeden önce eski manuel
 `com.sharkesc.layout-clone` kurulumunu yedekleyip kaldırırım; böylece iki
 araç çubuğu düğmesi oluşmaz. Güncellemeden sonra eklenti penceresini yeniden açarım.
@@ -100,3 +107,8 @@ ve [Undo/Redo komutları](https://gitlab.com/kicad/code/kicad/-/blob/10.0.5/comm
 karşılaştırıldı. Asimetrik chamfer/trapezoid/özel padler, serbest metin ve
 referans/değer biçimi eşleşti; gerçek aktarım ve Undo doğrulandı. Dil değişince
 onay kutularının genişliği yeniden hesaplanarak Türkçe etiket kesilmesi giderildi.
+
+0.3.2 düzeltmesi ayrı, numarasız pasta açıklıklarını numaralı bakır padleriyle
+eşleştirir. Courtyard ekleme/kaldırma, iki aktarım yönü ve karşı yüzler dahil
+91 test geçti. Açık karttaki R1/R2 için iki yönde yalnız önizleme doğrulandı;
+kart üzerinde değişiklik uygulanmadı.

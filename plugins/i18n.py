@@ -45,6 +45,11 @@ MESSAGES = {
     'Kaynak ve hedefleri al; aktarım kapsamını seçip önizle.': 'Capture source and targets; choose the copy scope and preview.',
     'Her hedef mevcut konumunda ve açısında kalır. Pad numaraları birebir eşleştirilir.':
         'Each target keeps its position and angle. Pads are matched exactly by number.',
+    'Her hedef mevcut konumunda ve açısında kalır.': 'Each target keeps its position and angle.',
+    'Numaralı padler numaralarına, pasta açıklıkları bağlı oldukları padlere göre eşleştirilir.':
+        'Numbered pads match by number; paste apertures match by their associated pads.',
+    'Pad geometrisi ve ayarları korunur; pad eşleştirmesi yapılmaz.':
+        'Pad geometry and settings are preserved; pads are not matched.',
     'Aktarılacak kapsam': 'Copy scope',
     '{ref}: {n} pad değişecek; çizimler {old} → {new}.': '{ref}: {n} pads will change; graphics {old} → {new}.',
     'Pad': 'Pad', 'Mekanik': 'Mechanical', 'Ağ': 'Net', 'Uyumsuz': 'Incompatible',
@@ -54,6 +59,12 @@ MESSAGES = {
     'Yinelenen veya birden fazla numarasız pad güvenle eşleştirilemiyor.':
         'Repeated pad numbers or multiple unnumbered pads cannot be matched safely.',
     'Numarasız pad bir ağa bağlı; aktarım engellendi.': 'An unnumbered pad has a net; transfer blocked.',
+    'Numarasız pasta açıklığının bağlı olduğu pad belirsiz; aktarım engellendi.':
+        'The pad associated with an unnumbered paste aperture is ambiguous; transfer blocked.',
+    'Aynı pade bağlı birden fazla pasta açıklığı güvenle eşleştirilemiyor.':
+        'Multiple paste apertures associated with the same pad cannot be matched safely.',
+    'Kaynak ve hedef pad eşleşmeleri farklı; pad ekleme/silme yapılmaz.':
+        'Source and target pad mappings differ; pads are never added or deleted.',
     'Desteklenmeyen footprint alt öğesi var; aktarım engellendi.': 'Unsupported footprint child item; transfer blocked.',
     'Kaynak ve hedef farklı kart yüzlerinde; bu sürümde aktarım engellendi.':
         'Source and target are on different board sides; transfer is blocked in this version.',

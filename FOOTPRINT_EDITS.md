@@ -1,4 +1,4 @@
-# Footprint Edits — Layout Clone 0.3.1
+# Footprint Edits — Layout Clone 0.3.2
 
 [Türkçe](FOOTPRINT_EDITS.tr.md)
 
@@ -54,12 +54,18 @@ The two tabs maintain separate source/target selections.
 
 ## Compatibility and safety
 
-The source and each target need the **same pad-number set**. Front-to-back and
+When pad copying is enabled, the source and each target need the **same pad mapping**. Front-to-back and
 back-to-front transfer reflect the source geometry and convert side-specific
 layers using KiCad flip conventions, while retaining the target side and angle.
 Internal copper layers use the current board copper-layer count.
-One unnumbered, net-free mechanical pad is supported. Multiple unnumbered pads
-or repeated pad numbers are rejected because their correspondence is ambiguous.
+Numbered pads match by unique number. Net-free, paste-only apertures match by
+their uniquely nearest numbered copper pad and relative board side, with at most
+one aperture per pad and paste layer. This supports separate paste pads in small
+SMD resistor footprints. Ambiguous associations and repeated numbered pads are
+rejected. One additional unnumbered, net-free mechanical pad is supported.
+Graphics-only or field-only copying does not require pad matching and preserves
+all target pads exactly. To copy courtyard/graphics without pad edits, disable
+**Pad geometry and settings**.
 Adding/removing/renumbering pads is deliberately unsupported. Locked targets,
 unknown footprint child types, and copper/unsupported-layer graphics are rejected.
 Disable graphics copying to copy pads only when copper graphics are present.
@@ -77,7 +83,7 @@ No special library override is created by this feature.
 
 ## Installation and validation
 
-Download `Layout_Clone-0.3.1-pcm.zip` from the [release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.1)
+Download `Layout_Clone-0.3.2-pcm.zip` from the [release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.2)
 and use PCM **Install from File…**. Back up and remove the legacy manual
 `com.sharkesc.layout-clone` installation before installing the community PCM
 package, to avoid duplicate actions. Close and reopen the plugin after updating.
@@ -100,3 +106,8 @@ In 0.3.1, both transfer directions were compared with an independent KiCad C++
 flip oracle, including asymmetric chamfer/trapezoid/custom pads, free text and
 reference/value formatting. Native update and Undo passed. Checkbox widths are
 remeasured after language changes to prevent truncated Turkish labels.
+
+The 0.3.2 fix associates separate unnumbered paste apertures with numbered
+copper pads. All 91 tests passed, including courtyard addition/removal and
+opposite-side transfer. Both R1/R2 directions were also previewed against the
+live board without applying edits.
