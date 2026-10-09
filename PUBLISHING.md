@@ -3,20 +3,20 @@
 [Türkçe](PUBLISHING.tr.md)
 
 The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
-`com.github.mey-26.kicad-layout-clone`. Version 0.3.1 is a Windows testing release.
+`com.github.mey-26.kicad-layout-clone`. Version 0.3.2 is a Windows testing release.
 
 ## Current submission
 
 [Official metadata merge request !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
 was opened on 8 October 2026 and is ready for KiCad maintainer review.
-The source branch now contains 0.3.1 and the [merge-request validation pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2926550631) passed. This is not an accepted catalogue listing.
+The source branch now contains 0.3.2 and the [merge-request validation pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2929464889) passed. This is not an accepted catalogue listing.
 Installation from the generated PCM catalogue has not been verified.
 
 ## Release artifacts
 
 Run `python build_pcm.py` at the repository root. It produces:
 
-- `dist/Layout_Clone-0.3.1-pcm.zip`: installable through PCM's Install from File.
+- `dist/Layout_Clone-0.3.2-pcm.zip`: installable through PCM's Install from File.
 - `dist/SHA256SUMS.txt`: archive integrity hash.
 - `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
   official-repository metadata containing the download URL, hash and sizes.
@@ -25,7 +25,7 @@ Run `python build_pcm.py` at the repository root. It produces:
 
 The ZIP's metadata deliberately omits download fields. The version declares
 `runtime: ipc`, preventing it from being treated as a legacy SWIG plugin.
-Upload the ZIP and checksum to the public GitHub release tagged `v0.3.1`.
+Upload the ZIP and checksum to the public GitHub release tagged `v0.3.2`.
 Verify that the download works without signing in and matches SHA256SUMS.
 Do not replace an archive after its hash is submitted; publish a new version.
 
@@ -46,7 +46,7 @@ KiCad controls acceptance and timing; no guaranteed review deadline exists here.
 
 ## Development checks
 
-Install `jsonschema` to run package-validation tests, then:
+Install `requirements-dev.txt` to run the 28 public source/package tests, then:
 
 ```sh
 python -m unittest discover -s tests -p "test_*.py"
