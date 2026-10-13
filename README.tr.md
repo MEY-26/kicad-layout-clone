@@ -8,7 +8,7 @@ seçersin. Parçalar kılıf, değer ve pad bağlantılarıyla eşleştirilir. K
 yönler referans komponente göre aktarılır; referans numaraları ve yerel ağ
 adları farklı olabilir.
 
-**0.3.2 · MIT · İngilizce ve Türkçe · KiCad IPC API**
+**0.3.3 · MIT · İngilizce ve Türkçe · KiCad IPC API**
 
 İki ayrı sekme bulunur: **Yerleşim** konum/açı kopyalar;
 **Footprint Düzenlemeleri** hedefin konumunu, kimliğini ve ağlarını koruyarak
@@ -27,6 +27,8 @@ projeye özgü pad geometrisini ve çizimleri kopyalar.
   dahil edilir; seçim otomatik genişletilmez.
 - Bir kaynak yerleşim tek işlemde birden fazla hedefe uygulanabilir.
 - Eşleştirme referans numarası sırasına değil, elektriksel bağlantılara dayanır.
+- Ön/arka yüzleri karışık gruplar ve karşı yüzlerdeki referanslar eşleştirilebilir.
+  Her hedef komponent, eşleşen kaynak komponentin kart yüzüne alınır.
 - Eşleşmeler, konum ve açılar önizlenir; belirsiz parçalar açıkça seçilir.
 - Ek dönüş yapılabilir; komponent **merkezleri** referansın yerel eksenlerinde
   yansıtılabilir.
@@ -41,7 +43,11 @@ Bu topluluk sürümü **Windows ve KiCad 10.0** içindir. KiCad **10.0.5**,
 Python 3.11, `kicad-python==0.7.1` ve `wxPython==4.2.2` ile sınandı.
 Linux/macOS doğrulanmadığından PCM platform listesinde bulunmuyor.
 
-1. [Sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.2) `Layout_Clone-0.3.2-pcm.zip` dosyasını indir.
+`Layout_Clone-0.3.3-pcm.zip` paketini
+[0.3.3 sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3) indir.
+Kaynak koddan paket oluşturmak için `python build_pcm.py` çalıştır; ZIP `dist/` klasörüne yazılır.
+
+1. Kuracağın sürümün PCM ZIP paketini edin.
 2. KiCad Proje Yöneticisi'nde **Plugin and Content Manager** bölümünü aç;
    **Install from File…** ile ZIP'i seç.
 3. KiCad Tercihleri'nde **Common → API** altındaki API sunucusunu etkinleştir.
@@ -50,9 +56,10 @@ Linux/macOS doğrulanmadığından PCM platform listesinde bulunmuyor.
 4. PCB düzenleyicisini aç veya yeniden aç; araç çubuğundan ya da eklenti
    menüsünden **Layout Clone** eklentisini başlat.
 
-GitHub'da yayımlanması, eklentiyi kendiliğinden varsayılan PCM kataloğuna eklemez.
-Arama üzerinden kurulum, KiCad ekibinin resmi metadata başvurusunu kabul
-etmesinden sonra kullanılabilir.
+İlk 0.3.2 başvurusu 13 Ekim 2026 tarihinde (İstanbul saati) resmi KiCad metadata
+deposuna birleştirildi. Varsayılan PCM kataloğu ayrı güncellenir. 0.3.3 için yeni
+sürüm metadata başvurusu gerekir; kurarken katalogdaki sürümü kontrol et.
+[Başvuru durumu](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.tr.md).
 
 Önceki elle kurulan `com.sharkesc.layout-clone` sürümünden geçiyorsan PCM
 sürümünü kurmadan önce eski kurulumu yedekleyip kaldır. Böylece iki araç çubuğu
@@ -86,10 +93,18 @@ Dil seçimi sağ üst köşededir.
 Ek dönüş **0°** iken hedef referans konumunu ve açısını korur. Ek dönüş, grubu
 hedef referansın merkezi etrafında döndürür. Yansıtma yalnız **merkezleri**,
 kaynak referansın yerel X veya Y eksenine göre yansıtır. Pad geometrisi, yönler
-ve pin sırası aynalanmaz; kart yüzü değişmez. Yansıtma kullanıldığında pin
+ve pin sırası bu seçenekle aynalanmaz. Yüz değişimi ayna ayarından bağımsız
+olarak eşleşen kaynak komponentten alınır. Yansıtma kullanıldığında pin
 konumları kontrol edilmelidir.
 
-Değer, kılıf, referans türü, pad sayısı ve kart yüzü uyumlu olmalıdır. Yerel ağ
+Değer, kılıf, referans türü ve pad sayısı uyumlu olmalıdır. Kaynak ve hedef
+gruplarda ön/arka yüzler karışık olabilir; referanslar karşı yüzlerde bulunabilir.
+Her hedef, eşleşen kaynak komponentin yüzüne alınır. Yüz değişiyorsa hedefin
+kendi padleri, pasta/maske açıklıkları, çizimleri ve yazıları yansıtılıp karşı
+katmanlara dönüştürülür; ardından konum/açı uygulanır. Kimlik, pad ağları,
+özel alanlar ve 3D modeller korunur. Önizlemenin Yüz sütununda F → B gibi
+değişiklikler gösterilir. Açılar önceki gibi kartın üstten görünümüne göre
+aktarılır. Yerel ağ
 adları farklı olabilir; ortak ağlar ve tüm pad bağlantıları tutarlı kalmalıdır.
 Desteklenen kutupsuz iki uçlu parçalarda ters terminal eşleşmesi 180° dönüşle
 karşılanır. Desteklenen dört uçlu Kelvin şöntlerinde ölçüm ve güç uç çiftleri
@@ -97,8 +112,10 @@ birlikte değerlendirilir.
 
 ## Sınırlar ve sorun giderme
 
-- Yerleşim sekmesinde yalnız mevcut komponentlerin konumu ve açısı değişir. İzler, via'lar,
+- Yerleşim sekmesinde mevcut komponentlerin konumu, açısı ve eşleşen yüzü değişir. İzler, via'lar,
   bölgeler ve ağ atamaları kopyalanmaz veya yeniden döşenmez.
+- Yüz çevirirken kılıf içi bakır bölgeleri veya desteklenmeyen öğeler varsa,
+  bu öğeleri silmek yerine işlem başlamadan hata verilir.
 - Önizleme merkezleri ve yönleri gösterir; çakışma veya bakır açıklığı kontrolü
   yapmaz. Yerleşimden sonra DRC gerekir.
 - Kilitli hedefler reddedilir. Önizleme sonrası kart değişirse yeniden

@@ -246,6 +246,10 @@ def verify_result(expected, actual):
                     from kipy.board_types import unwrap
                     aa = [unwrap(v) for v in va]; bb = [unwrap(v) for v in vb]
                     def key(v):
+                        # Custom fields use FieldId, not KIID. Their identity
+                        # must not depend on serialized geometry/defaults.
+                        if v.proto.DESCRIPTOR.full_name == 'kiapi.board.types.Field':
+                            return (v.proto.DESCRIPTOR.full_name, v.proto.id.id, v.proto.name)
                         return (v.proto.DESCRIPTOR.full_name, getattr(getattr(v, 'id', None), 'value',
                             v.proto.SerializeToString().hex()))
                     if sorted(map(key, aa)) != sorted(map(key, bb)):

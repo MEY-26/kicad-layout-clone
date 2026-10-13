@@ -1,6 +1,7 @@
 import sys
 import unittest
 from dataclasses import replace
+from itertools import product
 from pathlib import Path
 import json
 
@@ -41,6 +42,64 @@ class CoreTests(unittest.TestCase):
         cs, m = self.matched()
         self.assertEqual(m.candidates, {'U1':('U2',),'R1':('R9',),'R2':('R8',)})
 
+    def test_all_mixed_side_combinations_match_and_copy_source_sides(self):
+        refs = ('U1','R1','R2','U2','R8','R9')
+        baseline, match = self.matched()
+        expected = {p.ref:(p.x,p.y,p.angle) for p in plan_placement(baseline,match,match.suggestion)}
+        for faces in product('FB',repeat=len(refs)):
+            with self.subTest(faces=faces):
+                cs = {r:replace(baseline[r],side=face) for r,face in zip(refs,faces)}
+                before = dict(cs)
+                cs, match = self.matched(cs)
+                self.assertEqual(match.candidates, {'U1':('U2',),'R1':('R9',),'R2':('R8',)})
+                for pose in plan_placement(cs,match,match.suggestion):
+                    self.assertEqual(pose.side,cs[pose.source_ref].side)
+                    self.assertEqual((pose.x,pose.y,pose.angle),expected[pose.ref])
+                self.assertEqual(cs,before,'Planning must not mutate source or target components')
+
+    def test_board_side_remains_in_preview_fingerprint(self):
+        cs = circuit()
+        moved = dict(cs);moved['R9'] = replace(cs['R9'],side='B')
+        self.assertEqual(cs['R9'].match_kind,moved['R9'].match_kind)
+        self.assertNotEqual(cs['R9'].kind,moved['R9'].kind)
+        self.assertNotEqual(fingerprint(cs),fingerprint(moved))
+
+    def test_reported_resistor_capacitor_group_copies_each_source_side(self):
+        parts=[part('R1','10R',{'1':'input1','2':'node1'},10,20,side='F'),
+               part('R2','10R',{'1':'node1','2':'GND'},13,22,45,side='B'),
+               part('C1','1u',{'1':'node1','2':'GND'},8,24,side='F'),
+               part('R3','10R',{'1':'input2','2':'node2'},50,70,side='F'),
+               part('R4','10R',{'1':'node2','2':'GND'},48,77,side='F'),
+               part('C2','1u',{'1':'node2','2':'GND'},45,71,side='F')]
+        cs={p.ref:p for p in parts}
+        match=match_groups(cs,['R1','R2','C1'],['R3','R4','C2'],'R1','R3')
+        poses={p.ref:p for p in plan_placement(cs,match,match.suggestion)}
+        self.assertEqual({r:p.side for r,p in poses.items()},{'R3':'F','R4':'B','C2':'F'})
+        self.assertEqual((poses['R3'].x,poses['R3'].y,poses['R3'].angle),(50,70,0))
+
+    def test_different_sides_do_not_resolve_electrically_ambiguous_passives(self):
+        cs = circuit()
+        for r in ('R1','R2'):cs[r] = replace(cs[r],pins=(('1','ga'),('2','GND')))
+        for r in ('R8','R9'):cs[r] = replace(cs[r],pins=(('1','tx'),('2','GND')))
+        cs['R1'] = replace(cs['R1'],side='B')
+        cs['R8'] = replace(cs['R8'],side='B')
+        cs, match = self.matched(cs)
+        self.assertEqual(set(match.candidates['R1']),{'R8','R9'})
+        self.assertEqual(set(match.candidates['R2']),{'R8','R9'})
+
+    def test_mixed_sides_keep_value_footprint_and_connectivity_checks(self):
+        cs = circuit();cs['U2'] = replace(cs['U2'],side='B')
+        for field,value in [('value','other driver'),('footprint','other footprint')]:
+            bad = dict(cs);bad['U2'] = replace(cs['U2'],**{field:value})
+            with self.subTest(field=field),self.assertRaises(LayoutError):self.matched(bad)
+        cs['U2'] = replace(cs['U2'],pins=(('1','tx'),('2','GND'),('3','ty')))
+        with self.assertRaises(LayoutError):self.matched(cs)
+
+    def test_discovery_treats_opposite_side_anchor_as_peer_boundary(self):
+        cs = circuit()
+        cs['U2'] = replace(cs['U2'],side='B',pins=(('1','ga'),('2','ty'),('3','GND')))
+        self.assertEqual(set(discover_group(cs,'U1')),{'U1','R2'})
+
     def test_rotations_use_kicad_y_down_coordinates(self):
         for sa in (0,90,180,-90,37.5):
             for ta in (0,90,180,-90,12.5):
@@ -60,14 +119,15 @@ class CoreTests(unittest.TestCase):
         ps={p.ref:p for p in plan_placement(cs,m,m.suggestion,extra_angle=90)}
         self.assertEqual((ps['U2'].x,ps['U2'].y,ps['U2'].angle),(50,70,-90))
 
-    def test_mirror_changes_centres_only_and_preserves_faces(self):
+    def test_mirror_changes_centres_only_and_does_not_toggle_source_sides(self):
         cs=circuit();cs['U1']=replace(cs['U1'],angle=0);cs['U2']=replace(cs['U2'],angle=0)
+        cs['R1']=replace(cs['R1'],side='B')
         cs,m=self.matched(cs)
         x={p.ref:p for p in plan_placement(cs,m,m.suggestion,'x')}
         y={p.ref:p for p in plan_placement(cs,m,m.suggestion,'y')}
         self.assertEqual((x['R9'].x,x['R9'].y),(53,68))
         self.assertEqual((y['R9'].x,y['R9'].y),(47,72))
-        self.assertEqual(x['R9'].side,'F')
+        self.assertEqual(x['R9'].side,'B')
         self.assertEqual(x['U2'].angle,0)
 
     def test_resistor_terminal_swap_compensates_angle(self):

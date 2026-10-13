@@ -238,7 +238,7 @@ class TargetPage(wx.Panel):
                 self.grid.SetReadOnly(row, 1)
             for col in (0, 2, 3, 4, 5, 6, 7):
                 self.grid.SetReadOnly(row, col)
-        for col, width in enumerate((65, 72, 130, 110, 84, 84, 68, 48)):
+        for col, width in enumerate((65, 72, 130, 110, 84, 84, 68, 72)):
             self.grid.SetColSize(col, width)
         self.grid.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.on_changed)
         self.plot_container = wx.Panel(self)
@@ -284,7 +284,9 @@ class TargetPage(wx.Panel):
             by_source = {p.source_ref: p for p in poses}
             for row in range(self.grid.GetNumberRows()):
                 p = by_source[self.grid.GetCellValue(row, 0)]
-                for col, value in ((4, f'{p.x:.4f}'), (5, f'{p.y:.4f}'), (6, f'{p.angle:.1f}°'), (7, p.side)):
+                old_side = self.components[p.ref].side
+                face = p.side if old_side == p.side else f'{old_side} → {p.side}'
+                for col, value in ((4, f'{p.x:.4f}'), (5, f'{p.y:.4f}'), (6, f'{p.angle:.1f}°'), (7, face)):
                     self.grid.SetCellValue(row, col, value)
                 self.grid.SetCellValue(row, 3, tr('Uçlar +180°' if p.pin_swap else 'Doğrulandı'))
             self.plot_sizer.Add(Plot(self.plot_container, self.components, poses, self.target.anchor), 1, wx.EXPAND)
@@ -444,7 +446,7 @@ class MainFrame(wx.Frame):
         self.mirror.SetSelection(0)
         options.Add(self.mirror, 1, wx.EXPAND)
         toolbar_body.Add(options, 0, wx.EXPAND | wx.ALL, 5)
-        self.info_text = '0°: hedef referans yerinde kalır. Ayna yalnız merkezleri yansıtır; pin düzeni ve kart yüzü korunur.'
+        self.info_text = '0°: hedef referans yerinde kalır. Her hedef, eşleşen kaynağın ön/arka yüzüne alınır. Ayna yalnız merkezleri yansıtır.'
         self.info = self.label(toolbar, self.info_text)
         self.info.Wrap(700)
         toolbar_body.Add(self.info, 0, wx.EXPAND | wx.ALL, 5)
@@ -734,9 +736,9 @@ class MainFrame(wx.Frame):
         candidates = []
         if source in self.snapshot.components and members is not None and source in members:
             excluded = members | {r for target in self.targets for r in target.refs}
-            kind = self.snapshot.components[source].kind
+            kind = self.snapshot.components[source].match_kind
             candidates = sorted((r for r,c in self.snapshot.components.items()
-                                 if c.kind == kind and r not in excluded), key=ref_key)
+                                 if c.match_kind == kind and r not in excluded), key=ref_key)
         self.target_anchor.SetItems(candidates)
         self.target_anchor.SetSelection(candidates.index(current) if current in candidates else wx.NOT_FOUND)
         self.target_changed(preserve_members=preserve_members)
@@ -774,7 +776,7 @@ class MainFrame(wx.Frame):
                 if source not in snapshot.components:
                     self.error(LayoutError('Önce kaynak referansı seç.'))
                     return
-                candidates = [r for r in refs if snapshot.components[r].kind == snapshot.components[source].kind]
+                candidates = [r for r in refs if snapshot.components[r].match_kind == snapshot.components[source].match_kind]
                 if not candidates:
                     self.error(LayoutError('Seçimde kaynak referansa denk bir komponent yok.'))
                     return
@@ -839,12 +841,12 @@ class MainFrame(wx.Frame):
             try:
                 source = parse_refs(self.source_group.GetValue(), self.snapshot.components)
                 cs = self.snapshot.components
-                kinds = Counter(cs[r].kind for r in source)
+                kinds = Counter(cs[r].match_kind for r in source)
                 excluded = set(source) | {r for t in self.targets for r in t.refs}
-                refs = [r for r in self.group_for(anchor) if r not in excluded and cs[r].kind in kinds]
+                refs = [r for r in self.group_for(anchor) if r not in excluded and cs[r].match_kind in kinds]
                 # Keep only an exact multiset. Never arbitrarily trim duplicate
                 # kinds by reference order or current placement distance.
-                if Counter(cs[r].kind for r in refs) != kinds:
+                if Counter(cs[r].match_kind for r in refs) != kinds:
                     raise LayoutError('Kaynakla aynı parça sayısı ve türlerinde güvenilir bir hedef '
                                       'önerilemedi. PCB’de hedef parçalarını seçip 2. düğmeye bas.')
                 match_groups(cs, source, refs, self.source_anchor.GetValue(), anchor)
@@ -873,7 +875,7 @@ class MainFrame(wx.Frame):
             anchor = self.target_anchor.GetValue()
             if anchor not in refs:
                 raise LayoutError('Hedef referans grup listesinde olmalı.')
-            if self.snapshot.components[anchor].kind != self.snapshot.components[source_anchor].kind:
+            if self.snapshot.components[anchor].match_kind != self.snapshot.components[source_anchor].match_kind:
                 raise LayoutError('Hedef referans kaynak referansla aynı tür, değer ve kılıfta olmalı.')
             validate_batch(source, [t.refs for t in self.targets]+[refs])
             self.targets.append(Target(anchor, tuple(refs)))

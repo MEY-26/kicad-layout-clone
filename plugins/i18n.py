@@ -101,8 +101,12 @@ MESSAGES = {
     'Ayna yok': 'No mirror',
     'Merkezleri yerel X ekseninde aynala': 'Mirror centres across local X axis',
     'Merkezleri yerel Y ekseninde aynala': 'Mirror centres across local Y axis',
-    '0°: hedef referans yerinde kalır. Ayna yalnız merkezleri yansıtır; pin düzeni ve kart yüzü korunur.':
-        '0° keeps the target anchor in place. Mirroring reflects centres only; pin layout and board side are preserved.',
+    '0°: hedef referans yerinde kalır. Her hedef, eşleşen kaynağın ön/arka yüzüne alınır. Ayna yalnız merkezleri yansıtır.':
+        '0° keeps the target anchor in place. Each target takes its matched source’s front/back side. Mirroring reflects centres only.',
+    'Hedef yüzü eşleşen kaynak komponentle tutarlı değil:':
+        'Target side is inconsistent with the matched source footprint:',
+    'Geçersiz hedef kart yüzü:': 'Invalid target board side:',
+    'yüz çevirme için desteklenmeyen kılıf öğeleri:': 'unsupported footprint items for board-side conversion:',
     '03  Eşleştirme ve önizleme': '03  Matching and preview',
     '3 · Eşleştir ve önizle': '3 · Match and preview',
     '4 · Tüm hedeflere uygula': '4 · Apply to all targets',
@@ -179,10 +183,10 @@ MESSAGES = {
     'Grup boyutları farklı: kaynak {s}, hedef {n} komponent.': 'Group sizes differ: source {s}, target {n} footprints.',
     'Kaynak ve hedef gruplar ortak komponent içeremez.': 'Source and target groups cannot share footprints.',
     'Referans komponent kendi grubunun içinde olmalı.': 'Each anchor footprint must belong to its group.',
-    'Referans komponentlerin değeri, kılıfı, pin sayısı ve kart yüzü aynı olmalı.':
-        'Anchor footprints must have the same value, footprint, pin count and board side.',
-    'Grupların parça değerleri, kılıfları veya kart yüzleri eşleşmiyor.':
-        'The groups’ part values, footprints or board sides do not match.',
+    'Referans komponentlerin türü, değeri, kılıfı ve pin sayısı aynı olmalı.':
+        'Anchor footprints must have the same type, value, footprint and pin count.',
+    'Grupların parça türleri, değerleri, kılıfları veya pin sayıları eşleşmiyor.':
+        'The groups’ part types, values, footprints or pin counts do not match.',
     'Bağlantı eşleştirmesi çok karmaşık. Daha küçük bir grup veya daha belirgin bir referans seç.':
         'Connectivity matching is too complex. Choose a smaller group or a more distinctive anchor.',
     'Gruplar pin bağlantılarına göre eşdeğer değil.': 'The groups are not equivalent by pin connectivity.',

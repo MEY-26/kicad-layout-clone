@@ -1,62 +1,32 @@
-# Resmi KiCad PCM başvurusu
+# Resmi KiCad PCM yayını
 
-[English](PUBLISHING.md)
+Paket kimliği `com.github.mey-26.kicad-layout-clone`.
+0.3.3, Windows / KiCad 10.0 IPC test sürümüdür.
 
-Yayın projesi `MEY-26/kicad-layout-clone`, paket kimliği
-`com.github.mey-26.kicad-layout-clone`. 0.3.2, Windows için test sürümüdür.
+## 13 Ekim 2026 tarihindeki katalog durumu
 
-## Güncel başvuru
+[İlk başvuru !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
+Jon Evans tarafından 13 Ekim 2026 saat 01:47'de (İstanbul) birleştirildi.
+Kabul edilen [metadata kaydı](https://gitlab.com/kicad/addons/metadata/-/blob/main/packages/com.github.mey-26.kicad-layout-clone/metadata.json)
+0.3.2 sürümünü içeriyor. Kontrol sırasında varsayılan
+[PCM kataloğunda](https://repository.kicad.org/repository.json) Layout Clone henüz
+bulunmuyordu. Kabul edilmesi ve kataloğun güncellenmesi ayrı adımlardır.
 
-[Resmi metadata başvurusu !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
-8 Ekim 2026 tarihinde açıldı ve KiCad ekibinin incelemesine hazır duruma getirildi.
-Kaynak dalı 0.3.2 sürümüne güncellendi ve [merge request doğrulaması](https://gitlab.com/MEY-26/metadata/-/pipelines/2929464889) geçti. Bu durum, varsayılan kataloğa kabul edildiği anlamına gelmez.
-Üretilen PCM kataloğundan arayüz üzerinden kurulum henüz doğrulanmadı.
+0.3.3 [GitHub sürüm sayfasında](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3)
+yayımlanır. Metadata güncellemesi upstream main üzerinden yeni bir merge request
+ile gönderiliyor; birleştirilen !683 yeniden kullanılmıyor. Mevcut 0.3.2 kaydı korunur.
+Katalog güncellenene kadar 0.3.3 ZIP'i PCM'nin Install from File seçeneğiyle kurulabilir.
+Üretilen varsayılan katalogdan arayüz üzerinden kurulum henüz doğrulanmadı.
 
-## Sürüm dosyaları
+## Paketleme ve doğrulama
 
-Depo kökünde `python build_pcm.py` çalıştırıldığında:
+Depo kökünde `python build_pcm.py` çalıştır. `dist/Layout_Clone-0.3.3-pcm.zip`,
+`dist/SHA256SUMS.txt` ve `dist/submission/packages/com.github.mey-26.kicad-layout-clone/`
+altında metadata/simge oluşur. ZIP metadata'sı indirme alanlarını içermez;
+`runtime: ipc` bildirir. Resmi kaydı güncellemeden önce herkese açık indirmeyi
+SHA-256 ve boyutla doğrula. Yayımlanmış ZIP değişmez; içerik değişikliği için yeni sürüm çıkar.
 
-- `dist/Layout_Clone-0.3.2-pcm.zip`: PCM'de Install from File ile kurulacak paket.
-- `dist/SHA256SUMS.txt`: paketin bütünlük özeti.
-- `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
-  indirme bağlantısı, hash ve boyutları içeren resmi depo başvuru dosyası.
-- Aynı klasörde `icon.png`: 64×64 katalog simgesi.
-
-ZIP içindeki metadata indirme alanlarını içermez. `runtime: ipc` alanı paketin
-eski SWIG eklentisi sayılmasını önler. ZIP ve checksum dosyalarını GitHub'da
-`v0.3.2` etiketli herkese açık sürüme ekle. Giriş yapmadan indirilebildiğini ve
-SHA256SUMS ile eşleştiğini kontrol et. Başvuru sonrasında paketi değiştirmek
-yerine yeni bir sürüm çıkar.
-
-## Varsayılan katalogda aranabilir hale gelmesi
-
-1. GitLab'a giriş yapıp [kicad/addons/metadata](https://gitlab.com/kicad/addons/metadata)
-   deposunu fork et.
-2. Fork içinde örneğin `add-layout-clone` dalını oluştur.
-3. Üretilen `packages/com.github.mey-26.kicad-layout-clone/` klasörünü metadata
-   deposunun `packages/` klasörüne ekle.
-4. Commit oluştur ve ana deponun varsayılan dalına merge request aç.
-   Açıklama için [PCM_SUBMISSION.md](PCM_SUBMISSION.md) hazırlandı.
-5. KiCad ekibinin incelemesini takip et. Başvuru kabul edilip katalog
-   güncellendiğinde kullanıcılar varsayılan PCM listesinde **Layout Clone** arayabilir.
-
-GitHub sürümü veya yerel ZIP, PCM liste başvurusunun kabul edildiği anlamına
-gelmez. Başvuru ve takibi için GitLab hesabı gerekir. Kabul ve zamanlama
-KiCad ekibinin kontrolündedir; belirlenmiş bir inceleme süresi vaat edilmiyor.
-
-## Geliştirme kontrolleri
-
-28 açık kaynak/paket testi için `requirements-dev.txt` bağımlılıklarını kurup şu komutları çalıştır:
-
-```sh
-python -m unittest discover -s tests -p "test_*.py"
-python build_pcm.py
-```
-
-Testler sentetik devreleri kullanır; yayın deposunda proje PCB/şema dosyaları
-bulunmaz. GitHub Actions testleri çalıştırıp ZIP'i oluşturur. Gerçek kurulum
-kontrolü için ayrı KiCad yapılandırmasında ZIP'i kurup deneme kartında kaynak
-seçimi, hedef seçimi, önizleme, uygulama ve geri alma akışını dene.
-
-Resmi kaynaklar: [PCM paketleme ve başvuru](https://dev-docs.kicad.org/en/addons/index.html),
-[IPC eklenti geliştirme](https://dev-docs.kicad.org/en/apis-and-binding/ipc-api/for-addon-developers/).
+39 açık kaynak/paket ve 107 Windows geliştirme testi geçti. Yayın deposunda kullanıcı
+PCB/şema dosyaları yoktur. KiCad 10.0.5 C++ pad çevirme karşılaştırması ve izole
+arayüz/transport testleri yapıldı. Yeni canlı IPC Undo/Redo kontrolü yapılmadı;
+Linux/macOS çalışma zamanı doğrulanmadı.

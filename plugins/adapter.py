@@ -54,15 +54,22 @@ class Snapshot:
 
     @property
     def stamp(self):
-        return fingerprint(self.components)
+        return fingerprint(self.components) + ':' + str(self.copper_count)
 
 
-def moved_footprint(original, pose):
+def moved_footprint(original, pose, copper_count=2):
     """Use IPC wrapper transforms but retain local 3D models (kipy 0.7.1 drops
     unhandled children in its orientation setter). Unsupported item types are
     rejected before a board update, rather than silently being lost.
     """
-    updated = FootprintInstance(original.proto)
+    if pose.side not in ('F','B'):
+        raise LayoutError('Geçersiz hedef kart yüzü: ' + pose.ref)
+    current_side = 'B' if original.layer == BoardLayer.BL_B_Cu else 'F'
+    if current_side != pose.side:
+        from footprint_flip import flipped_footprint
+        updated = flipped_footprint(original, copper_count)
+    else:
+        updated = FootprintInstance(original.proto)
     original_items = list(updated.definition.items)
     supported = (Field, Pad, BoardText, Zone, BoardShape, Footprint3DModel)
     unknown = [type(item).__name__ for item in original_items if not isinstance(item, supported)]
@@ -159,8 +166,11 @@ class KiCadAdapter:
                 selected.add(by_id[uid(item)])
             elif isinstance(item, Group):
                 selected.update(members(item))
+        copper_count = self.request('bakır katman sayısını okuma', self.board.get_copper_layer_count)
+        if not 2 <= copper_count <= 32 or copper_count % 2:
+            raise LayoutError('Kartın bakır katman sayısı doğrulanamadı.')
         return Snapshot({r: describe(fp) for r, fp in objects.items()}, objects,
-                        named, tuple(sorted(selected)), self.board_key)
+                        named, tuple(sorted(selected)), self.board_key, copper_count)
 
     def drop_own_commit(self, commit):
         # KiCad 10.0.5 explicitly ignores commit.id for CMA_DROP, allowing a
@@ -178,11 +188,7 @@ class KiCadAdapter:
             raise
 
     def edits_snapshot(self):
-        snapshot = self.snapshot()
-        snapshot.copper_count = self.request('bakır katman sayısını okuma', self.board.get_copper_layer_count)
-        if not 2 <= snapshot.copper_count <= 32 or snapshot.copper_count % 2:
-            raise LayoutError('Kartın bakır katman sayısı doğrulanamadı.')
-        return snapshot
+        return self.snapshot()
 
     def check_write_context(self):
         # kipy 0.7.1 BeginCommit has no document selector. In KiCad 10.0.5
@@ -230,10 +236,11 @@ class KiCadAdapter:
                 raise LayoutError('Hedef komponent artık bulunamıyor: ' + pose.ref)
             if original.locked:
                 raise LayoutError('Kilitli komponent: ' + pose.ref)
-            current_side = 'B' if original.layer == BoardLayer.BL_B_Cu else 'F'
-            if current_side != pose.side:
-                raise LayoutError('Kart yüzü önizlemeden sonra değişti: ' + pose.ref)
-            updates.append(moved_footprint(original, pose))
+            source = before.components.get(pose.source_ref)
+            if (source is None or source.match_kind != before.components[pose.ref].match_kind
+                    or pose.side != source.side):
+                raise LayoutError('Hedef yüzü eşleşen kaynak komponentle tutarlı değil: ' + pose.ref)
+            updates.append(moved_footprint(original, pose, before.copper_count))
         def verify(results):
             by_id = {uid(fp): fp for fp in results if isinstance(fp, FootprintInstance)}
             if set(by_id) != {p.uid for p in poses}:
@@ -250,9 +257,13 @@ class KiCadAdapter:
                 angle_error = (actual.angle-pose.angle+180) % 360-180
                 if (math.hypot(actual.x-pose.x, actual.y-pose.y) > .000003
                         or abs(angle_error) > .00001 or actual.side != pose.side
-                        or actual.pins != prior.pins or actual.kind != prior.kind
+                        or actual.pins != prior.pins or actual.match_kind != prior.match_kind
                         or not models_ok or not pads_ok):
                     raise LayoutError('KiCad istenen yerleşimi doğrulamadı: ' + pose.ref)
+                if actual.side != prior.side:
+                    from footprint_edits import verify_result
+                    expected = next(fp for fp in updates if uid(fp) == pose.uid)
+                    verify_result(expected, new_fp)
         self.write_transaction(updates, verify, 'Yerleşim Kopyala: bağlantıya göre grup yerleşimi')
         return len(poses)
 

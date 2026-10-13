@@ -1,62 +1,36 @@
-# Official KiCad PCM submission
+# Official KiCad PCM publication
 
-[Türkçe](PUBLISHING.tr.md)
+The package identifier is `com.github.mey-26.kicad-layout-clone`.
+Version 0.3.3 is a Windows / KiCad 10.0 IPC testing release.
 
-The public project is `MEY-26/kicad-layout-clone`. Its package identifier is
-`com.github.mey-26.kicad-layout-clone`. Version 0.3.2 is a Windows testing release.
+## Catalogue status checked on 13 October 2026
 
-## Current submission
+The [initial submission !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
+was merged by Jon Evans on 13 October 2026 at 01:47 Istanbul time.
+The accepted [metadata entry](https://gitlab.com/kicad/addons/metadata/-/blob/main/packages/com.github.mey-26.kicad-layout-clone/metadata.json)
+contains version 0.3.2. At the time of this check, the default
+[PCM catalogue](https://repository.kicad.org/repository.json) had not yet included
+Layout Clone. Acceptance and catalogue refresh are separate steps.
 
-[Official metadata merge request !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
-was opened on 8 October 2026 and is ready for KiCad maintainer review.
-The source branch now contains 0.3.2 and the [merge-request validation pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2929464889) passed. This is not an accepted catalogue listing.
-Installation from the generated PCM catalogue has not been verified.
+Version 0.3.3 is published on [GitHub](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3).
+Its metadata update is being submitted in a new merge request, based on upstream
+main; the already merged !683 is not reused. The existing 0.3.2 version is retained.
+Install the 0.3.3 ZIP through PCM's Install from File while waiting for the catalogue.
+Installation through the generated default catalogue has not been verified.
 
-## Release artifacts
+## Build and verify
 
-Run `python build_pcm.py` at the repository root. It produces:
+Run `python build_pcm.py` at the repository root. It produces
+`dist/Layout_Clone-0.3.3-pcm.zip`, `dist/SHA256SUMS.txt`, and submission metadata/icon
+under `dist/submission/packages/com.github.mey-26.kicad-layout-clone/`.
+The archive metadata omits download fields and declares `runtime: ipc`.
+Verify the public download's SHA-256 and size before updating the official entry.
+Published archives are immutable; publish a new version to change their contents.
 
-- `dist/Layout_Clone-0.3.2-pcm.zip`: installable through PCM's Install from File.
-- `dist/SHA256SUMS.txt`: archive integrity hash.
-- `dist/submission/packages/com.github.mey-26.kicad-layout-clone/metadata.json`:
-  official-repository metadata containing the download URL, hash and sizes.
-- `dist/submission/packages/com.github.mey-26.kicad-layout-clone/icon.png`:
-  64×64 catalogue icon.
+39 public/package tests and 107 Windows development tests passed. The source is
+synthetic and contains no user PCB or schematic files. The current version includes
+an independent KiCad 10.0.5 C++ pad-flip comparison and isolated GUI/transport tests.
+New live IPC Undo/Redo checks were not run; Linux/macOS runtime remains unverified.
 
-The ZIP's metadata deliberately omits download fields. The version declares
-`runtime: ipc`, preventing it from being treated as a legacy SWIG plugin.
-Upload the ZIP and checksum to the public GitHub release tagged `v0.3.2`.
-Verify that the download works without signing in and matches SHA256SUMS.
-Do not replace an archive after its hash is submitted; publish a new version.
-
-## Make it discoverable in the default catalogue
-
-1. Sign in to GitLab and fork [kicad/addons/metadata](https://gitlab.com/kicad/addons/metadata).
-2. Create a branch such as `add-layout-clone` in the fork.
-3. Copy the generated `packages/com.github.mey-26.kicad-layout-clone/`
-   directory into the metadata repository's `packages/` directory.
-4. Commit it and open a merge request to the upstream default branch.
-   Use [PCM_SUBMISSION.md](PCM_SUBMISSION.md) as the description.
-5. Respond to maintainer review. Only after acceptance and catalogue refresh
-   should users be told to search for **Layout Clone** in the default PCM list.
-
-A GitHub release and a local ZIP do not constitute an accepted PCM listing.
-A GitLab account is needed to submit and maintain the merge request.
-KiCad controls acceptance and timing; no guaranteed review deadline exists here.
-
-## Development checks
-
-Install `requirements-dev.txt` to run the 28 public source/package tests, then:
-
-```sh
-python -m unittest discover -s tests -p "test_*.py"
-python build_pcm.py
-```
-
-Tests use synthetic circuits; the public repository contains no project boards
-or schematic files. A GitHub Actions workflow runs these tests and builds the ZIP.
-For a runtime smoke test, install the ZIP in a separate KiCad configuration and
-try source capture, target capture, preview, apply and undo on a disposable board.
-
-Official references: [PCM packaging and submission](https://dev-docs.kicad.org/en/addons/index.html),
+References: [PCM submission](https://dev-docs.kicad.org/en/addons/index.html),
 [IPC plugin development](https://dev-docs.kicad.org/en/apis-and-binding/ipc-api/for-addon-developers/).

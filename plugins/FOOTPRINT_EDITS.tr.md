@@ -1,4 +1,6 @@
-# Footprint Düzenlemeleri — Layout Clone 0.3.2
+# Footprint Düzenlemeleri — Layout Clone 0.3.3
+
+0.3.3 sürümünde Yerleşim sekmesi eşleşen kaynağın kart yüzünü de kopyalar. Footprint Düzenlemeleri sekmesi hedefin mevcut kart yüzünü korumaya devam eder.
 
 [English](FOOTPRINT_EDITS.md)
 

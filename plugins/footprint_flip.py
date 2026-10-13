@@ -3,7 +3,7 @@
 Board Y is reflected and footprint orientation negated. The placement helper
 then aligns this template to the target, whose position/angle/side stay intact.
 """
-from kipy.board_types import FootprintInstance, Pad, BoardShape, BoardText
+from kipy.board_types import FootprintInstance, Pad, BoardShape, BoardText, Field, Footprint3DModel
 from kipy.proto.board.board_types_pb2 import BoardLayer, PadStackType
 from core import LayoutError
 
@@ -105,3 +105,36 @@ def flipped_template(source, copper_count):
     template.proto.orientation.value_degrees = (-template.orientation.degrees + 180) % 360 - 180
     template.layer = flip_layer(template.layer, copper_count)
     return template
+
+
+def flipped_footprint(original, copper_count):
+    """Flip a complete target without dropping its fields, models or identity.
+
+    Embedded zones and unsupported child types are rejected before a commit;
+    unlike a source template, a target must never silently discard content.
+    Model coordinates are footprint-local and stay unchanged, as in KiCad.
+    """
+    result = FootprintInstance(original.proto)
+    items = list(result.definition.items)
+    supported = (Pad, BoardShape, BoardText, Field, Footprint3DModel)
+    unknown = sorted({type(item).__name__ for item in items if not isinstance(item, supported)})
+    if unknown:
+        raise LayoutError(f'{original.reference_field.text.value}: yüz çevirme için desteklenmeyen kılıf öğeleri: ' + ', '.join(unknown))
+    center_y = result.position.y
+    for item in items:
+        if isinstance(item, Pad):
+            mirror_pad(item, center_y, copper_count)
+        elif isinstance(item, BoardShape):
+            mirror_points(item.proto.shape, center_y)
+            item.layer = flip_layer(item.layer, copper_count)
+        elif isinstance(item, BoardText):
+            mirror_text(item.proto, center_y, copper_count)
+        elif isinstance(item, Field):
+            mirror_text(item.proto.text, center_y, copper_count)
+    result.definition.items = items
+    for name in ('reference_field', 'value_field', 'datasheet_field', 'description_field'):
+        if result.proto.HasField(name):
+            mirror_text(getattr(result, name).proto.text, center_y, copper_count)
+    result.proto.orientation.value_degrees = (-result.orientation.degrees + 180) % 360 - 180
+    result.layer = flip_layer(result.layer, copper_count)
+    return result

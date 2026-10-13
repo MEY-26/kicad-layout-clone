@@ -8,7 +8,7 @@ groups. Parts are matched using footprint identity, value and pad connectivity.
 Positions and orientations are transferred relative to an anchor, even when
 reference numbers and local net names differ.
 
-**0.3.2 · MIT · English and Turkish · KiCad IPC API**
+**0.3.3 · MIT · English and Turkish · KiCad IPC API**
 
 Two separate tabs: **Placement** copies positions/angles; **Footprint Edits**
 copies project-local pad geometry and footprint graphics while preserving target
@@ -26,6 +26,8 @@ placement, identity and nets. See [Footprint Edits usage and scope](FOOTPRINT_ED
   selected footprints are included; selections are never automatically expanded.
 - Apply one source placement to multiple target groups in one operation.
 - Match electrical roles rather than reference-number order.
+- Match groups containing front/back footprints, including opposite-side
+  anchors. Each target takes its matched source footprint's board side.
 - Preview mappings, positions and angles; resolve ambiguous parts explicitly.
 - Add rotation or reflect footprint **centres** along the anchor's local axes.
 - Remove individual targets or clear all targets while keeping the source.
@@ -39,7 +41,11 @@ This community release targets **Windows and KiCad 10.0**. Tested with KiCad
 **10.0.5**, Python 3.11, `kicad-python==0.7.1` and `wxPython==4.2.2`.
 Linux/macOS have not been verified and are excluded from the PCM platform list.
 
-1. Download `Layout_Clone-0.3.2-pcm.zip` from the [release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.2).
+Download `Layout_Clone-0.3.3-pcm.zip` from the
+[0.3.3 release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3).
+To build from source, run `python build_pcm.py`; the archive is written to `dist/`.
+
+1. Obtain the PCM ZIP for the version you want to install.
 2. In the KiCad Project Manager, open **Plugin and Content Manager**, then
    **Install from File…** and select the ZIP.
 3. Enable the API server in KiCad Preferences under **Common → API**. Configure
@@ -48,9 +54,10 @@ Linux/macOS have not been verified and are excluded from the PCM platform list.
 4. Open or reopen the PCB Editor and launch **Layout Clone** from its toolbar
    or plugin menu.
 
-GitHub publication alone does not add the plugin to the default PCM catalogue.
-Search installation becomes available after KiCad maintainers accept the
-official metadata submission.
+The initial 0.3.2 submission was merged into the official KiCad metadata
+repository on 13 October 2026 (Istanbul time). The default PCM catalogue updates
+separately. Version 0.3.3 requires its own metadata update; check the catalogue
+version before installing. See [submission status](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.md).
 
 If upgrading from the manually installed `com.sharkesc.layout-clone` build,
 back up and remove that legacy installation before installing the PCM version
@@ -85,19 +92,28 @@ The language selector is in the upper-right corner.
 At **0° additional rotation**, the target anchor keeps its position and angle.
 Additional rotation rotates the group around the target anchor's centre.
 Reflection changes **centres only** around the source anchor's local X or Y
-axis. It does not mirror pad geometry, orientations or pin order, or flip the
-board side. Inspect pin positions when using reflection.
+axis. This optional reflection does not mirror pad geometry, orientations or
+pin order. Board-side changes come from the matched source, independently of
+the reflection setting. Inspect pin positions when using reflection.
 
-Matching requires compatible values, footprints, reference types, pad counts
-and board sides. Local net names may differ; shared nets and complete pad
+Matching requires compatible values, footprints, reference types and pad counts.
+Source and target groups may mix front/back sides, and their anchors may be on
+opposite sides. Every target takes its matched source's board side. If its side
+changes, the target's own pads, paste/mask, graphics and text are reflected and
+converted to the opposite layers before applying position/angle. Identity, pad
+nets, custom fields and 3D models are retained. The preview's Side column shows
+changes such as F → B. Angles use the same board-view rotation as before.
+Local net names may differ; shared nets and complete pad
 connectivity must remain consistent. Reversed terminals of supported non-polar
 two-pin parts receive a compensating 180° rotation. Supported four-terminal
 Kelvin shunts retain paired sense and power ends.
 
 ## Limits and troubleshooting
 
-- In the Placement tab, only existing footprint positions and angles change. Tracks, vias, zones
+- In the Placement tab, existing footprint positions, angles and matched board sides change. Tracks, vias, zones
   and net assignments are not copied or rerouted.
+- Automatic side changes reject footprints with embedded zones or unsupported
+  child items before starting a transaction, rather than dropping those items.
 - Preview shows centres and directions, without collision or copper-clearance
   checks. Run DRC after placement.
 - Locked targets are rejected. Board changes after preview require a fresh

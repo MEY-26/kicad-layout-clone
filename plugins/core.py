@@ -10,7 +10,7 @@ import re
 import time
 from i18n import tr
 
-VERSION = '0.3.2'
+VERSION = '0.3.3'
 
 
 class LayoutError(ValueError):
@@ -47,9 +47,16 @@ class Component:
         return len(numbers) == 2 and (self.prefix == 'R' or (self.prefix == 'C' and not polarized))
 
     @property
-    def kind(self):
+    def match_kind(self):
+        """Electrical/footprint compatibility, independent of board placement."""
         return (self.prefix, self.value.strip().casefold(), self.footprint,
-                self.side, len({p for p, _ in self.pins}), self.nonpolar, self.kelvin_pairs)
+                len({p for p, _ in self.pins}), self.nonpolar, self.kelvin_pairs)
+
+    @property
+    def kind(self):
+        # Keep the board side in fingerprints and write verification even
+        # though matching deliberately ignores it.
+        return self.match_kind[:3] + (self.side,) + self.match_kind[3:]
 
     def net(self, number):
         return dict(self.pins)[number]
@@ -97,7 +104,7 @@ def discover_group(components, anchor, depth=6, ignored=(), max_fanout=12):
         for _, net in c.pins:
             if net:
                 net_members[net].add(ref)
-    peers = {r for r, c in components.items() if c.kind == root.kind}
+    peers = {r for r, c in components.items() if c.match_kind == root.match_kind}
     pin_limit = max(32, len({p for p, _ in root.pins}))
     blocked = set(ignored)
     for net, members in net_members.items():
@@ -140,7 +147,7 @@ def build_graph(components, refs, anchor, shared):
     for ref in sorted(refs, key=ref_key):
         c = components[ref]
         node = ('c', ref)
-        g.labels[node] = ('component', c.kind, ref == anchor)
+        g.labels[node] = ('component', c.match_kind, ref == anchor)
         g.edges[node] = {}
         if c.kelvin_pairs:
             for i, (sense, force) in enumerate(c.kelvin_pairs):
@@ -269,10 +276,10 @@ def match_groups(components, source, target, source_anchor, target_anchor, secon
         raise LayoutError('Kaynak ve hedef gruplar ortak komponent içeremez.')
     if source_anchor not in source or target_anchor not in target:
         raise LayoutError('Referans komponent kendi grubunun içinde olmalı.')
-    if components[source_anchor].kind != components[target_anchor].kind:
-        raise LayoutError('Referans komponentlerin değeri, kılıfı, pin sayısı ve kart yüzü aynı olmalı.')
-    if Counter(components[r].kind for r in source) != Counter(components[r].kind for r in target):
-        raise LayoutError('Grupların parça değerleri, kılıfları veya kart yüzleri eşleşmiyor.')
+    if components[source_anchor].match_kind != components[target_anchor].match_kind:
+        raise LayoutError('Referans komponentlerin türü, değeri, kılıfı ve pin sayısı aynı olmalı.')
+    if Counter(components[r].match_kind for r in source) != Counter(components[r].match_kind for r in target):
+        raise LayoutError('Grupların parça türleri, değerleri, kılıfları veya pin sayıları eşleşmiyor.')
     shared = {n for r in source for _, n in components[r].pins if n} & {n for r in target for _, n in components[r].pins if n}
     a = build_graph(components, source, source_anchor, shared)
     b = build_graph(components, target, target_anchor, shared)
@@ -345,6 +352,8 @@ def plan_placement(components, match, mapping, mirror='none', extra_angle=0.0):
 
     Two-terminal R/nonpolar C pin swaps are compensated by 180 degrees so
     electrically equivalent terminals land in the corresponding positions.
+    Groups can mix front/back footprints; each target takes the matched
+    source's board side. The adapter flips target geometry before placement.
     The destination anchor's position is invariant; optional extra rotation
     rotates its orientation together with the rest of the group.
     """
@@ -382,7 +391,7 @@ def plan_placement(components, match, mapping, mirror='none', extra_angle=0.0):
         else:
             angle = source.angle-sa.angle+frame+(180 if swap else 0)
         poses.append(Pose(target.ref, target.uid, ta.x+x, ta.y+y,
-                          normalized(angle), target.side, sr, swap))
+                          normalized(angle), source.side, sr, swap))
     return poses
 
 

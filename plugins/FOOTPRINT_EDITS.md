@@ -1,4 +1,6 @@
-# Footprint Edits — Layout Clone 0.3.2
+# Footprint Edits — Layout Clone 0.3.3
+
+In version 0.3.3, Placement also copies each matched source board side. Footprint Edits continues to preserve the target board side.
 
 [Türkçe](FOOTPRINT_EDITS.tr.md)
 
