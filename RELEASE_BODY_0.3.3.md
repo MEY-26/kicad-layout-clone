@@ -30,4 +30,3 @@ eşleşen kaynak komponentin yüzüne alınır; padler, pasta/maske açıklıkla
 çizimler ve yazılar uygun şekilde çevrilir. Hedef kimliği ve ağları korunur.
 Önizlemede F → B / B → F görünür. Kullanıcı yerel 0.3.3 sürümünün çalıştığını
 doğruladı. 39 açık kaynak/paket ve 107 Windows geliştirme testi geçti.
-

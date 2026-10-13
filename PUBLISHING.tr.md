@@ -8,14 +8,15 @@ Paket kimliği `com.github.mey-26.kicad-layout-clone`.
 [İlk başvuru !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683),
 Jon Evans tarafından 13 Ekim 2026 saat 01:47'de (İstanbul) birleştirildi.
 Kabul edilen [metadata kaydı](https://gitlab.com/kicad/addons/metadata/-/blob/main/packages/com.github.mey-26.kicad-layout-clone/metadata.json)
-0.3.2 sürümünü içeriyor. Kontrol sırasında varsayılan
-[PCM kataloğunda](https://repository.kicad.org/repository.json) Layout Clone henüz
-bulunmuyordu. Kabul edilmesi ve kataloğun güncellenmesi ayrı adımlardır.
+0.3.2 sürümünü içeriyor. Varsayılan [PCM kataloğu](https://repository.kicad.org/repository.json)
+13 Ekim saat 14:02'de (İstanbul) güncellendi ve artık Layout Clone 0.3.2'yi listeliyor.
 
 0.3.3 [GitHub sürüm sayfasında](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3)
-yayımlanır. Metadata güncellemesi upstream main üzerinden yeni bir merge request
-ile gönderiliyor; birleştirilen !683 yeniden kullanılmıyor. Mevcut 0.3.2 kaydı korunur.
-Katalog güncellenene kadar 0.3.3 ZIP'i PCM'nin Install from File seçeneğiyle kurulabilir.
+yayımlandı. [Metadata güncellemesi !692](https://gitlab.com/kicad/addons/metadata/-/merge_requests/692)
+mevcut 0.3.2 kaydını koruyor. Yeni başvuru açık, çakışmasız ve bakım ekibinin incelemesini
+bekliyor. [CI testleri](https://gitlab.com/MEY-26/metadata/-/pipelines/2942138149) geçti.
+Herkese açık ZIP, resmi yerel paket/simge doğrulayıcılarından da geçti.
+Bu güncelleme kabul edilene kadar 0.3.3 ZIP'i PCM'nin Install from File seçeneğiyle kurulabilir.
 Üretilen varsayılan katalogdan arayüz üzerinden kurulum henüz doğrulanmadı.
 
 ## Paketleme ve doğrulama

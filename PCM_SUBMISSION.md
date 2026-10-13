@@ -35,4 +35,7 @@ is supported. Documentation covers DRC, library updates overwriting project-loca
 edits, and existing guards against concurrent PCB/schematic editors.
 
 The public archive's unauthenticated download, SHA-256, sizes and official local
-PCM package/icon validation will be verified before submission.
+PCM package/icon validation passed. The update was submitted as
+[!692](https://gitlab.com/kicad/addons/metadata/-/merge_requests/692), whose
+[CI pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2942138149) passed.
+The official PCM catalogue currently lists 0.3.2; 0.3.3 awaits maintainer review.

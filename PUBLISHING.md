@@ -8,14 +8,15 @@ Version 0.3.3 is a Windows / KiCad 10.0 IPC testing release.
 The [initial submission !683](https://gitlab.com/kicad/addons/metadata/-/merge_requests/683)
 was merged by Jon Evans on 13 October 2026 at 01:47 Istanbul time.
 The accepted [metadata entry](https://gitlab.com/kicad/addons/metadata/-/blob/main/packages/com.github.mey-26.kicad-layout-clone/metadata.json)
-contains version 0.3.2. At the time of this check, the default
-[PCM catalogue](https://repository.kicad.org/repository.json) had not yet included
-Layout Clone. Acceptance and catalogue refresh are separate steps.
+contains version 0.3.2. The default [PCM catalogue](https://repository.kicad.org/repository.json)
+was refreshed on 13 October at 14:02 Istanbul time and now lists Layout Clone 0.3.2.
 
 Version 0.3.3 is published on [GitHub](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3).
-Its metadata update is being submitted in a new merge request, based on upstream
-main; the already merged !683 is not reused. The existing 0.3.2 version is retained.
-Install the 0.3.3 ZIP through PCM's Install from File while waiting for the catalogue.
+Its [metadata update !692](https://gitlab.com/kicad/addons/metadata/-/merge_requests/692)
+retains the existing 0.3.2 version. The new merge request is open, conflict-free and
+awaiting maintainer review. Its [CI pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2942138149)
+passed. The public archive also passed the official local package/icon validators.
+Install the 0.3.3 ZIP through PCM's Install from File while waiting for this update.
 Installation through the generated default catalogue has not been verified.
 
 ## Build and verify
