@@ -12,8 +12,11 @@ Varsayılan [PCM kataloğu](https://repository.kicad.org/repository.json) artık
 
 0.3.4, Footprint Düzenlemeleri sekmesine otomatik 3B model aktarımı ekler.
 [GitHub sürümü](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.4)
-ve kabul edilmiş iki sürümü koruyan yeni metadata güncellemesi yayın için hazırlanır.
-Bakım ekibinin incelemesi ve katalog güncellemesi beklenirken ZIP, PCM'nin
+yayımlandı. Kabul edilmiş iki sürümü koruyan
+[metadata güncellemesi !694](https://gitlab.com/kicad/addons/metadata/-/merge_requests/694)
+bakım ekibinin incelemesini bekliyor. [CI testleri](https://gitlab.com/MEY-26/metadata/-/pipelines/2947157734)
+geçti. Herkese açık ZIP indirmesinin SHA-256 ve boyutları, resmi paket/simge
+doğrulamasıyla birlikte kontrol edildi ve geçti. Katalog güncellemesi beklenirken ZIP, PCM'nin
 Install from File seçeneğiyle kurulabilir. Varsayılan katalogdan arayüz
 üzerinden kurulum henüz doğrulanmadı.
 

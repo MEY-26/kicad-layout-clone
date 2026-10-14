@@ -36,5 +36,8 @@ New native IPC Undo/Redo checks were not run; GUI/transport tests use an isolate
 test double. Linux/macOS and installation through the generated catalogue
 remain unverified. Prior native checks are documented separately.
 
-The public archive is checked by unauthenticated download, SHA-256 and sizes,
-and the official local PCM package/icon validators before submission.
+The public archive's unauthenticated download, SHA-256, sizes and official
+local PCM package/icon validation passed. The update was submitted as
+[!694](https://gitlab.com/kicad/addons/metadata/-/merge_requests/694), whose
+[CI pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2947157734) passed.
+The official PCM catalogue currently offers 0.3.3; 0.3.4 awaits maintainer review.

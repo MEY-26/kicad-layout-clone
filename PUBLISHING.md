@@ -12,9 +12,12 @@ and retains 0.3.2. The catalogue was refreshed on 14 October at 14:02 Istanbul t
 
 Version 0.3.4 adds automatic 3D model synchronization in Footprint Edits.
 Its [GitHub release](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.4)
-is prepared for publication with a separate metadata update retaining both
-accepted versions. Install its ZIP through PCM's Install from File while
-waiting for maintainer review and the catalogue refresh.
+is public. The [metadata update !694](https://gitlab.com/kicad/addons/metadata/-/merge_requests/694)
+retains both accepted versions and awaits maintainer review. Its
+[CI pipeline](https://gitlab.com/MEY-26/metadata/-/pipelines/2947157734) passed.
+The public ZIP download's SHA-256 and sizes, and official local package/icon
+validation passed. Install its ZIP through PCM's Install from File while
+waiting for this update and the catalogue refresh.
 Installation through the generated default catalogue has not been verified.
 
 ## Build and verify
