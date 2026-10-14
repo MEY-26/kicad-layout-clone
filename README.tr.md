@@ -8,11 +8,12 @@ seçersin. Parçalar kılıf, değer ve pad bağlantılarıyla eşleştirilir. K
 yönler referans komponente göre aktarılır; referans numaraları ve yerel ağ
 adları farklı olabilir.
 
-**0.3.3 · MIT · İngilizce ve Türkçe · KiCad IPC API**
+**0.3.4 sürümü · MIT · İngilizce ve Türkçe · KiCad IPC API**
 
 İki ayrı sekme bulunur: **Yerleşim** konum/açı kopyalar;
 **Footprint Düzenlemeleri** hedefin konumunu, kimliğini ve ağlarını koruyarak
-projeye özgü pad geometrisini ve çizimleri kopyalar.
+projeye özgü pad geometrisini ve çizimleri kopyalar; 3B model dosya yolları ve
+dönüşüm ayarları da otomatik aktarılır.
 [Yeni sekmenin kullanım ve kapsamı](FOOTPRINT_EDITS.tr.md).
 
 [English](README.md) · [Sürümler](https://github.com/MEY-26/kicad-layout-clone/releases) · [Hata bildir](https://github.com/MEY-26/kicad-layout-clone/issues)
@@ -23,6 +24,9 @@ projeye özgü pad geometrisini ve çizimleri kopyalar.
 
 - **Footprint Düzenlemeleri** ile projeye özgü pad geometrisi, çizimler ve isteğe
   bağlı referans/değer biçimi kopyalanır; karşı yüz dönüşümü de desteklenir.
+- Her footprint düzenlemesinde kaynağın tüm 3B model listesi, ölçek, dönüş,
+  offset, görünürlük ve opaklık değerleriyle otomatik kopyalanır. Bu özellik
+  0.3.4 sürümündedir; yayımlanmış 0.3.3 paketleri değiştirilmez.
 - Kaynak ve hedefler PCB üzerinden alınır. Yalnız seçili komponentler
   dahil edilir; seçim otomatik genişletilmez.
 - Bir kaynak yerleşim tek işlemde birden fazla hedefe uygulanabilir.
@@ -43,8 +47,8 @@ Bu topluluk sürümü **Windows ve KiCad 10.0** içindir. KiCad **10.0.5**,
 Python 3.11, `kicad-python==0.7.1` ve `wxPython==4.2.2` ile sınandı.
 Linux/macOS doğrulanmadığından PCM platform listesinde bulunmuyor.
 
-`Layout_Clone-0.3.3-pcm.zip` paketini
-[0.3.3 sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3) indir.
+`Layout_Clone-0.3.4-pcm.zip` paketini
+[0.3.4 sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.4) indir.
 Kaynak koddan paket oluşturmak için `python build_pcm.py` çalıştır; ZIP `dist/` klasörüne yazılır.
 
 1. Kuracağın sürümün PCM ZIP paketini edin.
@@ -56,10 +60,9 @@ Kaynak koddan paket oluşturmak için `python build_pcm.py` çalıştır; ZIP `d
 4. PCB düzenleyicisini aç veya yeniden aç; araç çubuğundan ya da eklenti
    menüsünden **Layout Clone** eklentisini başlat.
 
-İlk 0.3.2 başvurusu 13 Ekim 2026 tarihinde (İstanbul saati) resmi KiCad metadata
-deposuna birleştirildi. Varsayılan PCM kataloğu ayrı güncellenir. 0.3.3 için yeni
-sürüm metadata başvurusu gerekir; kurarken katalogdaki sürümü kontrol et.
-[Başvuru durumu](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.tr.md).
+0.3.3 ve 0.3.2 kabul edildi ve resmi PCM kataloğunda listeleniyor. 0.3.4 için
+metadata güncellemesi ve katalog yenilemesi gerekir.
+[Yayın durumuna bak](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.tr.md).
 
 Önceki elle kurulan `com.sharkesc.layout-clone` sürümünden geçiyorsan PCM
 sürümünü kurmadan önce eski kurulumu yedekleyip kaldır. Böylece iki araç çubuğu

@@ -1,10 +1,11 @@
-# Footprint Edits — Layout Clone 0.3.2
+# Footprint Edits — Layout Clone 0.3.4
 
 [Türkçe](FOOTPRINT_EDITS.tr.md)
 
 The **Placement** tab continues copying positions and orientations between
-repeated circuits. The new **Footprint Edits** tab copies manual, project-local
-footprint geometry. It does not edit the original library footprint.
+repeated circuits. The **Footprint Edits** tab copies manual, project-local
+footprint geometry and automatically synchronizes the source's 3D model list
+and settings. It does not edit the original library footprint.
 
 ## Use
 
@@ -18,10 +19,16 @@ footprint geometry. It does not edit the original library footprint.
 4. Choose **Pad geometry and settings**, **Footprint graphics and free text**,
    or both. Reference/value text formatting and local positions are an
    additional, **off by default** option; their text contents remain target-specific.
+   **3D models always copy automatically**, without a separate checkbox. You can
+   leave all geometry options off to synchronize only 3D models.
 5. Click **3 · Preview edits**. The report shows the exact targets, changed-pad
-   count, graphic counts and proposed pad positions, dimensions and nets.
-   Enable **Show all geometry and pad settings** to inspect the complete proposed
-   pad, graphic and optional text records. This is a numerical preview, not DRC.
+   count, graphic counts and proposed pad positions, dimensions and nets. It
+   also shows old/new model counts and every copied model's filename, XYZ scale,
+   XYZ rotation in degrees, XYZ offset in millimetres, visibility and opacity.
+   Enable **Show all geometry, pad and 3D model settings** to inspect the complete
+   proposed pad, graphic, optional text and model records. This is a numerical
+   preview, not DRC. If the source has no models, the preview states that the
+   target's model list will be cleared.
 6. Remove incompatible targets and preview again. All listed targets must be
    compatible before Apply is enabled. Click **4 · Apply footprint edits**.
    Inspect the PCB and run DRC; save only when satisfied. **Ctrl+Z** in PCB Editor
@@ -46,9 +53,19 @@ The two tabs maintain separate source/target selections.
   compatible slot/type where possible; added graphics receive target-specific IDs.
 - **Optional reference/value formatting:** copies appearance and local position,
   keeping the target's field IDs, names and reference/value strings.
+- **Automatic 3D models:** replaces each target's complete model list with the
+  source's list, retaining its order and exact filenames, scale, rotation,
+  offset, visibility and opacity. The model transforms remain in footprint-local
+  coordinates, including for rotated or opposite-side targets. The target's
+  position, angle and board side determine its 3D placement as in KiCad. A source
+  with no models clears the targets' model lists. Model references are copied;
+  external STEP/VRML files are not duplicated or edited. External filenames and
+  environment-variable paths are supported. Embedded `kicad-embed:` source
+  models are rejected before writing: IPC does not provide the embedded file
+  contents needed to copy them safely. Use an external source model path instead.
 - **Always preserved:** target footprint UUID, library ID, position, orientation,
   board side, lock state, reference/value, symbol path/sheet information, complete
-  per-pad nets and pad UUIDs/symbol-pin metadata. Target 3D models, custom fields,
+  per-pad nets and pad UUIDs/symbol-pin metadata. Target custom fields,
   footprint-level rules/attributes, net ties and local zones remain unchanged.
 - No library, schematic, track, via or board-zone edits; no automatic board save.
 
@@ -63,9 +80,9 @@ their uniquely nearest numbered copper pad and relative board side, with at most
 one aperture per pad and paste layer. This supports separate paste pads in small
 SMD resistor footprints. Ambiguous associations and repeated numbered pads are
 rejected. One additional unnumbered, net-free mechanical pad is supported.
-Graphics-only or field-only copying does not require pad matching and preserves
-all target pads exactly. To copy courtyard/graphics without pad edits, disable
-**Pad geometry and settings**.
+Graphics-only, field-only or model-only copying does not require pad matching
+and preserves all target pads exactly. To copy courtyard/graphics without pad
+edits, disable **Pad geometry and settings**; 3D models still synchronize.
 Adding/removing/renumbering pads is deliberately unsupported. Locked targets,
 unknown footprint child types, and copper/unsupported-layer graphics are rejected.
 Disable graphics copying to copy pads only when copper graphics are present.
@@ -83,8 +100,10 @@ No special library override is created by this feature.
 
 ## Installation and validation
 
-Download `Layout_Clone-0.3.2-pcm.zip` from the [release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.2)
-and use PCM **Install from File…**. Back up and remove the legacy manual
+Automatic 3D model synchronization is included in the
+[0.3.4 release](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.4).
+Build a PCM archive with `python build_pcm.py` and use PCM **Install from File…**.
+Back up and remove the legacy manual
 `com.sharkesc.layout-clone` installation before installing the community PCM
 package, to avoid duplicate actions. Close and reopen the plugin after updating.
 English remains the default for a fresh installation; the last chosen language is remembered.

@@ -16,7 +16,7 @@ class FootprintEditsPanel(wx.Panel):
         self.plan = None
         self.SetBackgroundColour(COLORS['bg'])
         root = wx.BoxSizer(wx.VERTICAL)
-        note = wx.StaticText(self, label='Yalnız bu PCB’deki footprint geometrisini kopyalar. Yerleşim ve kütüphane değişmez.')
+        note = wx.StaticText(self, label='Bu PCB’de footprint geometrisi ve 3B model ayarları kopyalanır. Yerleşim ve kütüphane değişmez.')
         self.note = note
         text_style(note, 12, True)
         root.Add(note, 0, wx.ALL, 16)
@@ -50,12 +50,12 @@ class FootprintEditsPanel(wx.Panel):
         for check in (self.pads, self.graphics, self.fields):
             right.Add(check, 0, wx.ALL, 10)
             check.Bind(wx.EVT_CHECKBOX, lambda event: self.invalidate())
-        scope = wx.StaticText(content, label='Korunur: konum, yön, yüz, referans, değer, şema bağlantısı ve pad ağları.\n3B modeller, özel alanlar, footprint kuralları ve zone öğeleri hedefte korunur.')
+        scope = wx.StaticText(content, label='3B modeller otomatik kopyalanır: dosya yolu, ölçek, dönüş, offset, görünürlük ve opaklık. Hedefin model listesi kaynakla değiştirilir.\nKorunur: konum, yön, yüz, referans, değer, şema bağlantısı, pad ağları, özel alanlar, footprint kuralları ve zone öğeleri.')
         self.scope = scope
         set_text(scope, scope.GetLabel())
         text_style(scope, color=COLORS['muted']); scope.Wrap(650)
         right.Add(scope, 0, wx.ALL, 10)
-        self.details = wx.CheckBox(content, label='Tüm geometri ve pad ayarlarını göster')
+        self.details = wx.CheckBox(content, label='Tüm geometri, pad ve 3B model ayarlarını göster')
         right.Add(self.details, 0, wx.ALL, 10)
         self.details.Bind(wx.EVT_CHECKBOX, lambda event: self.render_report())
         self.report = wx.TextCtrl(content, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.TE_DONTWRAP)
@@ -177,7 +177,8 @@ class FootprintEditsPanel(wx.Panel):
         from footprint_edits import graphics
         lines = [tr('Kaynak') + ': ' + self.plan.source + ' (' + self.plan.source_side + ')',
                  tr('Hedef') + ': ' + ', '.join(self.plan.targets), '']
-        lines.append(tr('Her hedef mevcut konumunda ve açısında kalır.'))
+        lines.append(tr('Her hedef mevcut konumunda, açısında ve kart yüzünde kalır.'))
+        lines.append(tr('3B model listesi ve ayarları otomatik olarak kaynaktan kopyalanır.'))
         if self.plan.options.pads:
             lines.append(tr('Numaralı padler numaralarına, pasta açıklıkları bağlı oldukları padlere göre eşleştirilir.'))
         else:
@@ -185,15 +186,33 @@ class FootprintEditsPanel(wx.Panel):
         lines.append(tr('Aktarılacak kapsam') + ': ' + ', '.join(tr(label) for enabled, label in (
             (self.plan.options.pads, 'Pad geometrisi ve ayarları'),
             (self.plan.options.graphics, 'Footprint çizimleri ve serbest metinler'),
-            (self.plan.options.field_format, 'Referans/değer yazılarının biçimi ve yerel konumu')) if enabled))
-        for ref, changed, before, after in self.plan.rows:
-            lines.extend(['', tr('{ref}: {n} pad değişecek; çizimler {old} → {new}.').format(ref=ref, n=changed, old=before, new=after)])
+            (self.plan.options.field_format, 'Referans/değer yazılarının biçimi ve yerel konumu'),
+            (True, '3B model listesi ve ayarları (otomatik)')) if enabled))
+        for ref, changed, before, after, models_before, models_after in self.plan.rows:
+            lines.extend(['', tr('{ref}: {n} pad değişecek; çizimler {old} → {new}; 3B modeller {models_old} → {models_new}.').format(
+                ref=ref, n=changed, old=before, new=after,
+                models_old=models_before, models_new=models_after)])
             update = next(fp for fp in self.plan.updates if fp.reference_field.text.value == ref)
             from kipy.proto.board.board_types_pb2 import BoardLayer
             side = 'B' if update.layer == BoardLayer.BL_B_Cu else 'F'
             lines.append('  ' + tr('Yüz') + ': ' + side)
-            if side != self.plan.source_side:
+            if side != self.plan.source_side and (self.plan.options.pads
+                    or self.plan.options.graphics or self.plan.options.field_format):
                 lines.append('  ' + tr('Yerel geometri karşı yüz için yansıtıldı; hedefin yüzü ve açısı korundu.'))
+            if not models_after and models_before:
+                lines.append('  ' + tr('Kaynakta 3B model yok; hedefin 3B model listesi temizlenecek.'))
+            for index, model in enumerate(update.definition.models, 1):
+                lines.append('  ' + tr('3B model') + f' {index}: ' + model.filename)
+                for label, vector, unit in (
+                        ('Ölçek', model.scale, ''),
+                        ('Dönüş', model.rotation, '°'),
+                        ('Offset', model.offset, ' mm')):
+                    # KiCad serializes model offsets as millimetres, despite
+                    # the shared Vector3D proto's x_nm/y_nm/z_nm field names.
+                    lines.append('    ' + tr(label) +
+                                 f' · X {vector.x:.9g}{unit} · Y {vector.y:.9g}{unit} · Z {vector.z:.9g}{unit}')
+                lines.append('    ' + tr('Görünürlük') + ': ' + tr('Açık' if model.visible else 'Kapalı') +
+                             ' · ' + tr('Opaklık') + f': {model.opacity:.9g}')
             # Exact proposed dimensions and positions, independent of the view scale.
             for pad in update.definition.pads:
                 lines.append('  ' + tr('Pad') + ' ' + (pad.number or tr('Mekanik')) +
@@ -205,7 +224,7 @@ class FootprintEditsPanel(wx.Panel):
                                  f' · {layer.size.x_nm / 1e6:.4f} × {layer.size.y_nm / 1e6:.4f} mm')
             if self.details.GetValue():
                 from google.protobuf.text_format import MessageToString
-                lines.extend(['', tr('Önerilen geometri ve ayarlar (KiCad API alanları):')])
+                lines.extend(['', tr('Önerilen geometri ve 3B model ayarları (KiCad API alanları):')])
                 if self.plan.options.pads:
                     for pad in update.definition.pads:
                         lines.append(MessageToString(pad.proto))
@@ -215,6 +234,8 @@ class FootprintEditsPanel(wx.Panel):
                 if self.plan.options.field_format:
                     lines.append(MessageToString(update.reference_field.proto))
                     lines.append(MessageToString(update.value_field.proto))
+                for model in update.definition.models:
+                    lines.append(MessageToString(model.proto))
         for ref, reason in self.plan.rejected.items():
             lines.extend(['', ref + ': ' + tr('Uyumsuz') + ' — ' + tr(reason)])
         if self.plan.rejected:

@@ -8,11 +8,12 @@ groups. Parts are matched using footprint identity, value and pad connectivity.
 Positions and orientations are transferred relative to an anchor, even when
 reference numbers and local net names differ.
 
-**0.3.3 · MIT · English and Turkish · KiCad IPC API**
+**0.3.4 · MIT · English and Turkish · KiCad IPC API**
 
 Two separate tabs: **Placement** copies positions/angles; **Footprint Edits**
-copies project-local pad geometry and footprint graphics while preserving target
-placement, identity and nets. See [Footprint Edits usage and scope](FOOTPRINT_EDITS.md).
+copies project-local pad geometry and footprint graphics, and automatically
+synchronizes 3D model filenames and transforms while preserving target placement,
+identity and nets. See [Footprint Edits usage and scope](FOOTPRINT_EDITS.md).
 
 [Türkçe](README.tr.md) · [Releases](https://github.com/MEY-26/kicad-layout-clone/releases) · [Issues](https://github.com/MEY-26/kicad-layout-clone/issues)
 
@@ -22,6 +23,9 @@ placement, identity and nets. See [Footprint Edits usage and scope](FOOTPRINT_ED
 
 - Copy project-local pad geometry, footprint graphics and optional reference/value
   formatting with **Footprint Edits**, including front/back conversion.
+- Automatically copy the source's complete 3D model list and exact scale,
+  rotation, offset, visibility and opacity with every footprint edit. This
+  feature is included in 0.3.4; published 0.3.3 archives are unchanged.
 - Capture source and target footprints directly from PCB selection. Only the
   selected footprints are included; selections are never automatically expanded.
 - Apply one source placement to multiple target groups in one operation.
@@ -41,8 +45,8 @@ This community release targets **Windows and KiCad 10.0**. Tested with KiCad
 **10.0.5**, Python 3.11, `kicad-python==0.7.1` and `wxPython==4.2.2`.
 Linux/macOS have not been verified and are excluded from the PCM platform list.
 
-Download `Layout_Clone-0.3.3-pcm.zip` from the
-[0.3.3 release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3).
+Download `Layout_Clone-0.3.4-pcm.zip` from the
+[0.3.4 release page](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.4).
 To build from source, run `python build_pcm.py`; the archive is written to `dist/`.
 
 1. Obtain the PCM ZIP for the version you want to install.
@@ -54,10 +58,9 @@ To build from source, run `python build_pcm.py`; the archive is written to `dist
 4. Open or reopen the PCB Editor and launch **Layout Clone** from its toolbar
    or plugin menu.
 
-The initial 0.3.2 submission was merged into the official KiCad metadata
-repository on 13 October 2026 (Istanbul time). The default PCM catalogue updates
-separately. Version 0.3.3 requires its own metadata update; check the catalogue
-version before installing. See [submission status](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.md).
+Versions 0.3.3 and 0.3.2 are accepted and listed in the official PCM catalogue.
+Version 0.3.4 requires its own metadata update and catalogue refresh. See
+[publication status](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.md).
 
 If upgrading from the manually installed `com.sharkesc.layout-clone` build,
 back up and remove that legacy installation before installing the PCM version

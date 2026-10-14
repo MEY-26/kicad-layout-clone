@@ -1,3 +1,29 @@
+# Layout Clone 0.3.4
+
+Footprint Edits automatically replaces each target's complete 3D model list
+with the source list, including model paths, XYZ scale, rotation, offset,
+visibility and opacity. No extra checkbox is required. Model settings remain
+in footprint-local coordinates, preserving the target's board position, angle
+and side. The preview shows model counts and all proposed model settings.
+
+An empty source model list clears the target models. Disable the geometry
+options to synchronize models alone when either footprint has models.
+Embedded `kicad-embed://` source models are rejected before writing because
+the pinned IPC API does not provide their embedded file contents.
+
+Published 0.3.3 archives remain unchanged.
+
+Validation: 44 public source/package tests and 119 Windows development tests
+passed. The user confirmed the installed 0.3.4 behavior works. New native IPC
+Undo/Redo checks were not run; GUI/transport tests use an isolated test double.
+
+## Türkçe
+
+Footprint Düzenlemeleri artık kaynak footprint'in tüm 3B modellerini, dosya
+yollarını, ölçek, dönüş, offset, görünürlük ve opaklık ayarlarını otomatik kopyalar.
+Ek bir onay kutusu yoktur. Hedefin karttaki konumu, açısı ve yüzü korunur.
+Kaynakta model yoksa hedefin model listesi temizlenir; önizlemede açıkça gösterilir.
+
 # Layout Clone 0.3.3
 
 Placement groups can now mix front/back footprints. Each target takes the board

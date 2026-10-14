@@ -1,13 +1,11 @@
-# Footprint Düzenlemeleri — Layout Clone 0.3.3
-
-0.3.3 sürümünde Yerleşim sekmesi eşleşen kaynağın kart yüzünü de kopyalar. Footprint Düzenlemeleri sekmesi hedefin mevcut kart yüzünü korumaya devam eder.
+# Footprint Düzenlemeleri — Layout Clone 0.3.4
 
 [English](FOOTPRINT_EDITS.md)
 
 **Yerleşim** sekmesi aynı devrelerin konum ve yönlerini kopyalamaya devam eder.
-Yeni **Footprint Düzenlemeleri** sekmesi PCB üzerinde elle yaptığım, projeye özgü
-footprint düzenlemelerini başka parçalara aktarır. Orijinal kütüphane footprinti
-değişmez.
+**Footprint Düzenlemeleri** sekmesi PCB üzerinde elle yaptığım, projeye özgü
+footprint düzenlemelerini başka parçalara aktarır. Kaynağın 3B model listesi ve
+ayarları da otomatik kopyalanır. Orijinal kütüphane footprinti değişmez.
 
 ## Kullanım
 
@@ -21,10 +19,16 @@ değişmez.
 4. Pad geometrisi/ayarları ve footprint çizimleri/serbest metinler seçeneklerinden
    istediklerimi seçerim. Referans/değer yazılarının biçimi ve yerel konumu ayrıca
    seçilebilir; **varsayılan olarak kapalıdır** ve yazı içerikleri hedefe ait kalır.
+   **3B modeller her zaman otomatik kopyalanır**; ayrı bir onay kutusu yoktur.
+   Yalnız 3B modelleri aktarmak için tüm geometri seçeneklerini kapatabilirim.
 5. **3 · Düzenlemeleri önizle** ile hedef listesini, değişecek pad sayısını, çizim
-   sayılarını, pad konumlarını, boyutlarını ve ağlarını kontrol ederim.
-   **Tüm geometri ve pad ayarlarını göster** seçeneği önerilen pad/çizim/yazı
-   kayıtlarını ayrıntılı gösterir. Bu sayısal bir önizlemedir; DRC kontrolü değildir.
+   sayılarını, pad konumlarını, boyutlarını ve ağlarını kontrol ederim. Önizleme
+   eski/yeni model sayılarını, her modelin dosya yolunu, XYZ ölçeğini, derece
+   cinsinden XYZ dönüşünü, milimetre cinsinden XYZ offsetini, görünürlüğünü ve
+   opaklığını da gösterir. **Tüm geometri, pad ve 3B model ayarlarını göster**
+   seçeneği önerilen pad/çizim/yazı/model kayıtlarını ayrıntılı gösterir.
+   Bu sayısal bir önizlemedir; DRC kontrolü değildir. Kaynakta model yoksa
+   hedefin model listesinin temizleneceği önizlemede belirtilir.
 6. Uyumsuz hedefleri kaldırıp yeniden önizlerim. Listedeki tüm hedefler uyumlu
    olduğunda **4 · Footprint düzenlemelerini uygula** açılır. PCB’yi kontrol edip
    DRC çalıştırırım; uygun bulduğumda kaydederim. PCB düzenleyicisinde **Ctrl+Z**
@@ -48,10 +52,20 @@ tüm hedefleri kaldırabilirim; kaynak korunur. İki sekmenin kaynak/hedef liste
   mümkün olduğunca korunur; eklenen çizimler hedefe özgü yeni kimlik alır.
 - **İsteğe bağlı referans/değer biçimi:** görünüm ve yerel konum kopyalanır;
   hedefin alan kimliği, adı, referans ve değer metni korunur.
+- **Otomatik 3B modeller:** her hedefin tüm model listesi kaynak listesiyle
+  değiştirilir. Modellerin sırası, dosya yolları, ölçek, dönüş, offset, görünürlük
+  ve opaklık değerleri aynen kopyalanır. Döndürülmüş veya karşı yüzdeki hedeflerde
+  de model dönüşümleri footprintin yerel koordinatlarında kalır. Modelin karttaki
+  görünümünü KiCad'deki gibi hedefin konumu, açısı ve yüzü belirler. Kaynakta
+  model yoksa hedeflerin model listesi temizlenir. Model dosyalarının referansları
+  kopyalanır; dış STEP/VRML dosyaları çoğaltılmaz veya düzenlenmez. Harici dosya
+  yolları ve ortam değişkenli yollar desteklenir. IPC gömülü dosya içeriğini
+  sağlamadığından `kicad-embed:` kullanan kaynak modeller uygulamadan önce
+  engellenir. Bu durumda kaynak modeli harici dosya yoluyla tanımlarım.
 - **Her zaman korunanlar:** hedef footprintin UUID’si, kütüphane kimliği, konumu,
   açısı, kart yüzü, kilidi, referansı/değeri, şema ve sayfa bağlantıları; her padin
-  tam ağ kaydı, UUID’si ve sembol pin bilgileri. Hedefteki 3B modeller, özel
-  alanlar, footprint kuralları/özellikleri, net-tie tanımları ve yerel zone öğeleri korunur.
+  tam ağ kaydı, UUID’si ve sembol pin bilgileri. Hedefteki özel alanlar,
+  footprint kuralları/özellikleri, net-tie tanımları ve yerel zone öğeleri korunur.
 - Kütüphane, şema, yol, via ve kart zone öğelerine müdahale edilmez. Kart otomatik kaydedilmez.
 
 ## Uyumluluk ve kontroller
@@ -65,10 +79,10 @@ bulunan, ağa bağlı olmayan açıklıklar en yakın numaralı bakır pad ve g�
 yüzüyle eşleştirilir; her pad ve pasta katmanı için bir açıklık desteklenir.
 Böylece küçük SMD dirençlerdeki ayrı pasta padleri de aktarılabilir. Belirsiz
 eşleşmeler ve yinelenen numaralı padler engellenir. Ayrıca tek bir numarasız,
-ağa bağlı olmayan mekanik pad desteklenir. Yalnız çizim veya alan biçimi
+ağa bağlı olmayan mekanik pad desteklenir. Yalnız çizim, alan biçimi veya model
 aktarılırken pad eşleştirmesi yapılmaz; hedef padler aynen korunur.
 Courtyard/çizimleri padlere dokunmadan aktarmak için **Pad geometrisi ve ayarları**
-seçeneğini kapatırım.
+seçeneğini kapatırım; 3B modeller yine otomatik aktarılır.
 Pad ekleme/silme/yeniden numaralandırma bu sürümün kapsamı dışındadır.
 Kilitli hedefler, bilinmeyen footprint alt öğeleri ve bakır/desteklenmeyen
 katmandaki çizimler engellenir. Bakır çizim varsa çizim aktarımını kapatıp yalnız
@@ -86,9 +100,10 @@ iptal doğrulanamazsa PCB düzenleyicisi yeniden açılana kadar yazma engelleni
 
 ## Kurulum ve doğrulama
 
-[Sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.2)
-`Layout_Clone-0.3.2-pcm.zip` paketini indirip PCM’nin **Dosyadan yükle…**
-seçeneğiyle kurarım. Topluluk PCM paketine geçmeden önce eski manuel
+Otomatik 3B model aktarımı 0.3.4 sürümünde eklendi.
+Yayımlanmış [0.3.3 sürümünde](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.3)
+bu özellik bulunmaz. `python build_pcm.py` ile PCM paketi oluşturup
+**Dosyadan yükle…** seçeneğiyle kurarım. Topluluk PCM paketine geçmeden önce eski manuel
 `com.sharkesc.layout-clone` kurulumunu yedekleyip kaldırırım; böylece iki
 araç çubuğu düğmesi oluşmaz. Güncellemeden sonra eklenti penceresini yeniden açarım.
 Yeni kurulumda dil İngilizce gelir; son seçtiğim dil hatırlanır. Araç çubuğu

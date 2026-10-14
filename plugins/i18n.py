@@ -18,10 +18,14 @@ MESSAGES = {
     'Kartın bakır katman sayısı doğrulanamadı.': 'Could not verify the board copper layer count.',
     'İç bakır katmanı kartın katman yapısıyla uyumsuz.': 'Internal copper layer is incompatible with the board stackup.',
     'Tüm geometri ve pad ayarlarını göster': 'Show all geometry and pad settings',
+    'Tüm geometri, pad ve 3B model ayarlarını göster': 'Show all geometry, pad and 3D model settings',
     'Önerilen geometri ve ayarlar (KiCad API alanları):': 'Proposed geometry and settings (KiCad API fields):',
+    'Önerilen geometri ve 3B model ayarları (KiCad API alanları):': 'Proposed geometry and 3D model settings (KiCad API fields):',
     'Yerleşim': 'Placement', 'Footprint Düzenlemeleri': 'Footprint Edits',
     'Yalnız bu PCB’deki footprint geometrisini kopyalar. Yerleşim ve kütüphane değişmez.':
         'Copy footprint geometry on this PCB only. Placement and libraries stay unchanged.',
+    'Bu PCB’de footprint geometrisi ve 3B model ayarları kopyalanır. Yerleşim ve kütüphane değişmez.':
+        'Copy footprint geometry and 3D model settings on this PCB. Placement and libraries stay unchanged.',
     'Kaynak footprint seçilmedi.': 'No source footprint captured.',
     'PCB’de tek kaynak seç. Sonra Esc ile seçimi kaldır ve hedefleri seç.':
         'Select one source on the PCB. Then press Esc and select the targets.',
@@ -31,6 +35,8 @@ MESSAGES = {
     'Referans/değer yazılarının biçimi ve yerel konumu': 'Reference/value text formatting and local position',
     'Korunur: konum, yön, yüz, referans, değer, şema bağlantısı ve pad ağları.\n3B modeller, özel alanlar, footprint kuralları ve zone öğeleri hedefte korunur.':
         'Preserved: position, orientation, side, reference, value, schematic linkage and pad nets.\nTarget 3D models, custom fields, footprint rules and zones are kept.',
+    '3B modeller otomatik kopyalanır: dosya yolu, ölçek, dönüş, offset, görünürlük ve opaklık. Hedefin model listesi kaynakla değiştirilir.\nKorunur: konum, yön, yüz, referans, değer, şema bağlantısı, pad ağları, özel alanlar, footprint kuralları ve zone öğeleri.':
+        '3D models copy automatically: filename, scale, rotation, offset, visibility and opacity. The source replaces the target model list.\nPreserved: position, orientation, side, reference, value, schematic linkage, pad nets, custom fields, footprint rules and zones.',
     '3 · Düzenlemeleri önizle': '3 · Preview edits',
     '4 · Footprint düzenlemelerini uygula': '4 · Apply footprint edits',
     'PCB’de yalnız bir kaynak footprint seç.': 'Select exactly one source footprint on the PCB.',
@@ -46,12 +52,22 @@ MESSAGES = {
     'Her hedef mevcut konumunda ve açısında kalır. Pad numaraları birebir eşleştirilir.':
         'Each target keeps its position and angle. Pads are matched exactly by number.',
     'Her hedef mevcut konumunda ve açısında kalır.': 'Each target keeps its position and angle.',
+    'Her hedef mevcut konumunda, açısında ve kart yüzünde kalır.': 'Each target keeps its position, angle and board side.',
+    '3B model listesi ve ayarları otomatik olarak kaynaktan kopyalanır.':
+        'The 3D model list and settings copy automatically from the source.',
+    '3B model listesi ve ayarları (otomatik)': '3D model list and settings (automatic)',
+    'Kaynakta 3B model yok; hedefin 3B model listesi temizlenecek.':
+        'The source has no 3D models; the target model list will be cleared.',
+    '3B model': '3D model', 'Ölçek': 'Scale', 'Dönüş': 'Rotation', 'Offset': 'Offset',
+    'Görünürlük': 'Visibility', 'Opaklık': 'Opacity', 'Açık': 'On', 'Kapalı': 'Off',
     'Numaralı padler numaralarına, pasta açıklıkları bağlı oldukları padlere göre eşleştirilir.':
         'Numbered pads match by number; paste apertures match by their associated pads.',
     'Pad geometrisi ve ayarları korunur; pad eşleştirmesi yapılmaz.':
         'Pad geometry and settings are preserved; pads are not matched.',
     'Aktarılacak kapsam': 'Copy scope',
     '{ref}: {n} pad değişecek; çizimler {old} → {new}.': '{ref}: {n} pads will change; graphics {old} → {new}.',
+    '{ref}: {n} pad değişecek; çizimler {old} → {new}; 3B modeller {models_old} → {models_new}.':
+        '{ref}: {n} pads will change; graphics {old} → {new}; 3D models {models_old} → {models_new}.',
     'Pad': 'Pad', 'Mekanik': 'Mechanical', 'Ağ': 'Net', 'Uyumsuz': 'Incompatible',
     '{n} footprint düzenlendi. KiCad’de Ctrl+Z ile tek adımda geri alınabilir.':
         'Edited {n} footprints. Undo in one step with Ctrl+Z in KiCad.',
@@ -66,6 +82,8 @@ MESSAGES = {
     'Kaynak ve hedef pad eşleşmeleri farklı; pad ekleme/silme yapılmaz.':
         'Source and target pad mappings differ; pads are never added or deleted.',
     'Desteklenmeyen footprint alt öğesi var; aktarım engellendi.': 'Unsupported footprint child item; transfer blocked.',
+    'Gömülü 3B model dosyası IPC ile aktarılamıyor; kaynak modeli harici dosya yoluyla tanımla.':
+        'An embedded 3D model file cannot be transferred through IPC; use an external file path for the source model.',
     'Kaynak ve hedef farklı kart yüzlerinde; bu sürümde aktarım engellendi.':
         'Source and target are on different board sides; transfer is blocked in this version.',
     'En az bir aktarım seçeneği seç.': 'Select at least one copy option.',

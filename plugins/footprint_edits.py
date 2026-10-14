@@ -1,4 +1,4 @@
-"""Project-local geometry transfer for the pinned KiCad 10 / kipy 0.7.1 API.
+"""Project-local geometry/model transfer for the pinned KiCad 10 / kipy 0.7.1 API.
 
 Children have absolute board coordinates. Never replace the target instance
 with the source instance: symbol linkage, field contents and pad nets belong
@@ -111,8 +111,14 @@ def transfer(source, target, options, copper_count=2):
     validate_items(target)
     if target.locked:
         raise LayoutError('Kilitli komponent: ' + target.reference_field.text.value)
-    if not (options.pads or options.graphics or options.field_format):
+    if not (options.pads or options.graphics or options.field_format
+            or source.definition.models or target.definition.models):
         raise LayoutError('En az bir aktarım seçeneği seç.')
+    if any(model.proto.filename.lower().startswith('kicad-embed:')
+           for model in source.definition.models):
+        # Embedded payloads are not part of the pinned IPC footprint proto.
+        # Copying only a URI could resolve different target-local file content.
+        raise LayoutError('Gömülü 3B model dosyası IPC ile aktarılamıyor; kaynak modeli harici dosya yoluyla tanımla.')
     if options.pads:
         src_pads, dst_pads = pad_map(source), pad_map(target)
         if set(src_pads) != set(dst_pads):
@@ -122,13 +128,15 @@ def transfer(source, target, options, copper_count=2):
             raise LayoutError('Bakır veya desteklenmeyen katmanda çizim var; çizim aktarımı engellendi.')
     ref = target.reference_field.text.value
     side = 'B' if target.layer == BoardLayer.BL_B_Cu else 'F'
-    template = source
-    if source.layer != target.layer:
-        from footprint_flip import flipped_template
-        template = flipped_template(source, copper_count)
-    transformed = moved_footprint(template, Pose(ref, target.id.value,
-        target.position.x / 1e6, target.position.y / 1e6,
-        target.orientation.degrees, side, source.reference_field.text.value))
+    transformed = None
+    if options.pads or options.graphics or options.field_format:
+        template = source
+        if source.layer != target.layer:
+            from footprint_flip import flipped_template
+            template = flipped_template(source, copper_count)
+        transformed = moved_footprint(template, Pose(ref, target.id.value,
+            target.position.x / 1e6, target.position.y / 1e6,
+            target.orientation.degrees, side, source.reference_field.text.value))
     updated = FootprintInstance(target.proto)
     # Change only the geometry subset. Target symbol-pin metadata, UUID,
     # number, lock and complete net message remain intact.
@@ -180,6 +188,13 @@ def transfer(source, target, options, copper_count=2):
             field.proto.name = old.proto.name
             field.text.value = text
             setattr(updated, name, field)
+    # 3D transforms are footprint-local, unlike pad/graphic board coordinates.
+    # Always synchronize the complete original source model list. Do not use
+    # the aligned/flipped template, apply target board rotation to these values,
+    # or retain stale target models alongside the replacement models.
+    updated.definition.items = [item for item in updated.definition.items
+        if not isinstance(item, Footprint3DModel)] + [
+            Footprint3DModel(model.proto) for model in source.definition.models]
     return updated
 
 
@@ -201,7 +216,8 @@ def plan_edits(snapshot, source, targets, options=EditOptions()):
             original_pads = {p.id.value: p for p in original.definition.pads}
             changes = sum(p.proto.SerializeToString() != original_pads[p.id.value].proto.SerializeToString()
                           for p in update.definition.pads)
-            rows.append((ref, changes, len(graphics(original)), len(graphics(update))))
+            rows.append((ref, changes, len(graphics(original)), len(graphics(update)),
+                         len(original.definition.models), len(update.definition.models)))
         except LayoutError as error:
             rejected[ref] = ValueError.__str__(error)
     side = 'B' if snapshot.objects[source].layer == BoardLayer.BL_B_Cu else 'F'
