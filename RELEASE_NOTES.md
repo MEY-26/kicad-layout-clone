@@ -1,3 +1,48 @@
+# Layout Clone 0.3.5
+
+Fix board loading when repeated no-connect pad numbers, such as the four `SH`
+shield pads on a USB-C socket, have distinct KiCad-generated unconnected nets.
+Only pads with `symbol_pin.no_connect` set and a net name beginning with
+`unconnected-(` are treated as open in the in-memory matching model.
+
+The PCB's real pad nets and symbol-pin metadata are not modified. No pads are
+renumbered, no nets are renamed, and no schematic or connections are changed.
+Genuine conflicting nets on repeated pad numbers still block reading. The
+Footprint Edits geometry-copy requirement for unique numbered pads is unchanged.
+
+Validation: 60 public source/package tests passed, including 10 new adapter
+regressions using real IPC protobuf objects. They cover:
+
+- Four repeated `SH` pads with separate generated no-connect nets are accepted.
+- Repeated pad numbers on `GND` and `VBUS` remain rejected.
+- The generated-looking net name alone cannot bypass the check without a
+  no-connect mark.
+- Mixed connected and no-connect pads with the same number remain rejected.
+- Different open pin numbers and footprints remain separate graph nodes.
+- Reading leaves the complete original pad/footprint protobuf data unchanged.
+
+No new live KiCad IPC or native Undo/Redo checks were run for this read-only
+fix. Published 0.3.4 and earlier archives remain unchanged.
+
+## Türkçe
+
+USB-C soketinin dört `SH` gövde padi gibi aynı numaralı bağlantısız padlerin
+farklı otomatik ağ adları nedeniyle kartın okunmasını engellemesi düzeltildi.
+Yalnız `symbol_pin.no_connect` işaretli ve ağ adı `unconnected-(` ile başlayan
+padler, bellekteki eşleştirme modelinde bağlantısız değerlendirilir.
+
+PCB'nin gerçek pad ağları, pin bilgileri, şeması ve bağlantıları değiştirilmez;
+pad numaralandırma veya ağ yeniden adlandırma yapılmaz. Gerçek ağ çakışmaları
+reddedilmeye devam eder. Footprint Düzenlemeleri'nde geometri aktarımı için
+benzersiz pad numarası gerekliliği değişmedi.
+
+10 yeni regresyon dahil 60 açık kaynak/paket testi geçti. Dört bağlantısız `SH`
+padinin kabulü, `GND`/`VBUS` çakışmasının reddi, işaretsiz otomatik görünümlü
+ağ adının kontrolü aşamaması, bağlı/bağlantısız karışımın reddi, farklı açık
+pinlerin ayrı tutulması ve okuma sırasında gerçek verinin değişmemesi sınandı.
+Bu salt okuma düzeltmesi için yeni canlı IPC veya yerel Undo/Redo testi yapılmadı.
+Yayımlanmış 0.3.4 ve önceki paketler değiştirilmedi.
+
 # Layout Clone 0.3.4
 
 Footprint Edits automatically replaces each target's complete 3D model list

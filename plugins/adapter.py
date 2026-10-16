@@ -29,6 +29,10 @@ def describe(fp):
         if not pad.number:  # Mechanical/NPTH pads are not electrical pins.
             continue
         net = pad.net.name
+        # KiCad gives repeated no-connect pads separate auto-generated nets.
+        # Normalize only the matching model; never alter the PCB pad's net.
+        if pad.proto.symbol_pin.no_connect and net.startswith('unconnected-('):
+            net = ''
         if pad.number in pins and pins[pad.number] != net:
             raise LayoutError(f'{fp.reference_field.text.value}: aynı pin numarası farklı ağlara bağlı.')
         pins[pad.number] = net

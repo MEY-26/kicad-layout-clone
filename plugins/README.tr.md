@@ -8,7 +8,7 @@ seçersin. Parçalar kılıf, değer ve pad bağlantılarıyla eşleştirilir. K
 yönler referans komponente göre aktarılır; referans numaraları ve yerel ağ
 adları farklı olabilir.
 
-**0.3.4 sürümü · MIT · İngilizce ve Türkçe · KiCad IPC API**
+**0.3.5 sürümü · MIT · İngilizce ve Türkçe · KiCad IPC API**
 
 İki ayrı sekme bulunur: **Yerleşim** konum/açı kopyalar;
 **Footprint Düzenlemeleri** hedefin konumunu, kimliğini ve ağlarını koruyarak
@@ -18,10 +18,13 @@ dönüşüm ayarları da otomatik aktarılır.
 
 [English](README.md) · [Sürümler](https://github.com/MEY-26/kicad-layout-clone/releases) · [Hata bildir](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-![Türkçe Footprint Düzenlemeleri](docs/footprint-edits-0.3.1-tr.png)
+![Footprint Düzenlemeleri — İngilizce arayüz](https://raw.githubusercontent.com/MEY-26/kicad-layout-clone/main/docs/layout-clone-0.3.4-footprint-edits-en.png)
 
 ## Özellikler
 
+- USB-C gövde padleri gibi aynı numaralı no-connect padleri olan footprint'ler
+  okunabilir. KiCad'in ayrı otomatik bağlantısız ağ adları gerçek bağlantı
+  çakışması sayılmaz; gerçekten farklı ağlara bağlı yinelenen padler reddedilir.
 - **Footprint Düzenlemeleri** ile projeye özgü pad geometrisi, çizimler ve isteğe
   bağlı referans/değer biçimi kopyalanır; karşı yüz dönüşümü de desteklenir.
 - Her footprint düzenlemesinde kaynağın tüm 3B model listesi, ölçek, dönüş,
@@ -47,8 +50,8 @@ Bu topluluk sürümü **Windows ve KiCad 10.0** içindir. KiCad **10.0.5**,
 Python 3.11, `kicad-python==0.7.1` ve `wxPython==4.2.2` ile sınandı.
 Linux/macOS doğrulanmadığından PCM platform listesinde bulunmuyor.
 
-`Layout_Clone-0.3.4-pcm.zip` paketini
-[0.3.4 sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.4) indir.
+`Layout_Clone-0.3.5-pcm.zip` paketini
+[0.3.5 sürüm sayfasından](https://github.com/MEY-26/kicad-layout-clone/releases/tag/v0.3.5) indir.
 Kaynak koddan paket oluşturmak için `python build_pcm.py` çalıştır; ZIP `dist/` klasörüne yazılır.
 
 1. Kuracağın sürümün PCM ZIP paketini edin.
@@ -60,8 +63,8 @@ Kaynak koddan paket oluşturmak için `python build_pcm.py` çalıştır; ZIP `d
 4. PCB düzenleyicisini aç veya yeniden aç; araç çubuğundan ya da eklenti
    menüsünden **Layout Clone** eklentisini başlat.
 
-0.3.3 ve 0.3.2 kabul edildi ve resmi PCM kataloğunda listeleniyor. 0.3.4 için
-metadata güncellemesi ve katalog yenilemesi gerekir.
+0.3.3 ve 0.3.2 kabul edildi ve resmi PCM kataloğunda listeleniyor. 0.3.4 ve
+0.3.5, metadata incelemesini ve katalog yenilemesini bekliyor.
 [Yayın durumuna bak](https://github.com/MEY-26/kicad-layout-clone/blob/main/PUBLISHING.tr.md).
 
 Önceki elle kurulan `com.sharkesc.layout-clone` sürümünden geçiyorsan PCM
@@ -115,6 +118,11 @@ birlikte değerlendirilir.
 
 ## Sınırlar ve sorun giderme
 
+- 0.3.5 düzeltmesi, yalnız no-connect işaretli ve ağ adı `unconnected-(` ile
+  başlayan padleri bellekteki eşleştirme modelinde bağlantısız değerlendirir.
+  PCB ağlarını yeniden adlandırmaz; padleri, şemayı veya bağlantıları değiştirmez.
+  Footprint Düzenlemeleri'nde geometri aktarımı için pad numaralarının benzersiz
+  olması gerekliliği sürer.
 - Yerleşim sekmesinde mevcut komponentlerin konumu, açısı ve eşleşen yüzü değişir. İzler, via'lar,
   bölgeler ve ağ atamaları kopyalanmaz veya yeniden döşenmez.
 - Yüz çevirirken kılıf içi bakır bölgeleri veya desteklenmeyen öğeler varsa,
