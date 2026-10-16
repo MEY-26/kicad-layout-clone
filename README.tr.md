@@ -18,7 +18,7 @@ dönüşüm ayarları da otomatik aktarılır.
 
 [English](README.md) · [Sürümler](https://github.com/MEY-26/kicad-layout-clone/releases) · [Hata bildir](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-![Türkçe Footprint Düzenlemeleri](docs/footprint-edits-0.3.1-tr.png)
+![Footprint Düzenlemeleri — İngilizce arayüz](docs/layout-clone-0.3.4-footprint-edits-en.png)
 
 ## Özellikler
 

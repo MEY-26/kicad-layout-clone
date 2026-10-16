@@ -17,7 +17,7 @@ identity and nets. See [Footprint Edits usage and scope](FOOTPRINT_EDITS.md).
 
 [Türkçe](README.tr.md) · [Releases](https://github.com/MEY-26/kicad-layout-clone/releases) · [Issues](https://github.com/MEY-26/kicad-layout-clone/issues)
 
-![Footprint Edits in English](docs/footprint-edits-0.3.1-en.png)
+![Footprint Edits in English](docs/layout-clone-0.3.4-footprint-edits-en.png)
 
 ## Features
 
